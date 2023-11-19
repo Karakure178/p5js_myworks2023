@@ -1,0 +1,11 @@
+{
+    "overrides":[],
+    "extends": [
+        "stylelint-config-recess-order",
+        "stylelint-prettier/recommended"
+    ],
+    "ignoreFiles": [
+        "**/node_modules/**",
+        "**/*.css"
+    ]
+}

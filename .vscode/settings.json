@@ -1,0 +1,49 @@
+{
+  "files.eol": "\n",
+  "workbench.editor.enablePreview": false,
+  "editor.formatOnSave": false,
+  "workbench.colorCustomizations": {
+    "[Dracula Soft]": {
+      "editor.background": "#0c0f17",
+      "editor.findMatchHighlightBackground": "#1c1e22",
+      "editorGroupHeader.tabsBackground": "#191a21",
+      "editorIndentGuide.activeBackground": "#F0F0F045",
+      "terminal.background": "#0c0f17",
+      "statusBar.background": "#262626",
+      "sideBar.background": "#191a21",
+      "tab.activeBackground": "#0c0f17",
+      "tab.activeBorder": "#d5a2ff",
+      "tab.unfocusedActiveBorder": "#0c0f17",
+      "tab.inactiveBackground": "#282a36",
+      "titleBar.activeBackground": "#282A36",
+      "quickInput.background": "#343746",
+      "keybindingLabel.background": "#282a36",
+      "breadcrumb.background": "#0c0f17",
+      "editorBracketMatch.border": "#ffb71c",
+      "symbolIcon.textForeground": "#ff0000",
+      "activityBar.background": "#282A36"
+    }
+  },
+  "editor.tokenColorCustomizations": {
+    "[Dracula Soft]": {
+      "comments":"#606365"
+    }
+  },
+  "files.associations": {
+      ".stylelintrc": "json",
+      ".eslintrc": "json",
+      ".postcssrc.js": "javascript",
+  },
+  "html.format.endWithNewline": true,
+  "html.format.extraLiners": "",
+  "html.format.maxPreserveNewLines": 2,
+  "html.format.wrapLineLength": 0,
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "stylelint.validate": ["css", "scss"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.stylelint": true,
+    "source.fixAll.eslint": true
+  }
+}
