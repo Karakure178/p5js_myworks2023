@@ -1,0 +1,76 @@
+html,
+body {
+  margin: 0;
+  padding: 5px;
+  align-items: center;
+  text-align: center;
+}
+
+
+.main{
+  background-color: black;
+}
+
+p{
+  color: white;
+  font-size: 20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.glitch{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hrCmFy {
+  position: relative;
+  font-size: 152px;
+  text-align: left;
+  font-weight: 700;
+  line-height: normal;
+  color: white;
+  box-sizing: border-box;
+}
+
+.hrCmFy::before {
+  animation: 3s linear 0s infinite alternate-reverse none running dkAVdY;
+  left: 2px;
+  text-shadow: red -1px 0px;
+  background: rgb(4, 4, 4);
+}
+
+
+.hrCmFy::after {
+      animation: 6s linear 0s infinite alternate-reverse none running dkAVdY;
+      left: -2px;
+      text-shadow: blue -1px 0px;
+      background: rgb(4, 4, 4);
+}
+
+.hrCmFy::before, .hrCmFy::after {
+  display: block;
+  content: attr(data-text);
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+}
+
+.ePiSFz {
+  font-size: 152px;
+  text-align: left;
+  font-weight: 700;
+  line-height: normal;
+  display: block;
+  color: inherit;
+}
+
+@keyframes dkAVdY { 
+  0% { clip-path: inset(10% 0px 100%); }
+  20% { clip-path: inset(61% 10% 1% 0px); }
+  40% { clip-path: inset(43% 0px 12%); }
+  60% { clip-path: inset(25% 0px 58% 10%); }
+  80% { clip-path: inset(14% 0px 7%); }
+  100% { clip-path: inset(100% 10% 43% 0px); }
+}
