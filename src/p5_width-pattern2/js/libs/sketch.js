@@ -14,6 +14,7 @@ export const sketch = (p) => {
     canvas = p.createCanvas(one.clientWidth, one.clientHeight);
     canvas.parent(one);
     pg = p.createGraphics(p.width, p.height);
+    p.frameRate(24);
 
     p.noStroke();
     curtain(num, p.width / num);
@@ -36,8 +37,8 @@ export const sketch = (p) => {
 
   p.keyPressed = () => {
     if (p.key === 's') {
-      //p.saveCanvas(canvas, 'myCanvas', 'png');
-      p.saveGif('p5js_width-pattern2', 3);
+      p.saveCanvas(canvas, 'myCanvas', 'png');
+      //p.saveGif('p5js_width-pattern2', 3);
     }
   };
 
