@@ -14,7 +14,7 @@ export const sketch = (p) => {
 
     p.noStroke();
     const num = 30;
-    test(num, p.width / num);
+    curtain(num, p.width / num);
 
     pg.background(220);
     pg.erase();
@@ -37,7 +37,7 @@ export const sketch = (p) => {
    * @param {number} num - 何個の四角形を描くか
    * @param {number} s - 四角形の幅
    */
-  const test = (num, s) => {
+  const curtain = (num, s) => {
     for (let i = num; i > 0; i--) {
       const x = s * i;
       const y = p.height;
