@@ -1,5 +1,6 @@
 import { CanvasCapture } from 'canvas-capture';
 
+// 参考：https://npm.io/package/canvas-capture
 export const loop = () => {
   let gifCapture;
   const GIF_OPTIONS = {

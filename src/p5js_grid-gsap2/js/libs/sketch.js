@@ -6,8 +6,6 @@ import p5 from 'p5';
  */
 export const sketch = (p) => {
   let canvas;
-  let save = false;
-  let count = 0;
 
   let pg;
   const oddframe = { count: 0 };
@@ -27,7 +25,7 @@ export const sketch = (p) => {
 
   p.setup = () => {
     const one = document.getElementById('one');
-    canvas = p.createCanvas(800, 800);
+    canvas = p.createCanvas(one.clientWidth, one.clientHeight);
     canvas.parent(one);
     pg = p.createGraphics(p.width, p.height);
 
@@ -49,24 +47,17 @@ export const sketch = (p) => {
     grid(num, pg, obj);
     pg.noErase();
     pg.pop();
-    // pg.drawingContext.filter = 'drop-shadow(3px 4px 4px 220)';
-    //p.drawingContext.filter = 'drop-shadow(10px 10px 10px #3e3e3e)';
     p.image(pg, 0, 0);
     p.pop();
 
     p.noStroke();
     grid(num, false, obj2);
-    // なぜかpushで囲むと影がつかない
-    //p.drawingContext.filter = 'drop-shadow(5px 10px 10px #3d3d3d)';
-
-    if (save) savePicture();
   };
 
   p.keyPressed = () => {
     if (p.key === 's') {
-      save = true;
       //p.saveCanvas(canvas, 'myCanvas', 'png');
-      //p.saveGif('p5js_grid2', 8);
+      p.saveGif('p5js_grid-gsap3', 8);
     }
   };
 
@@ -130,18 +121,6 @@ export const sketch = (p) => {
           duration: 2,
           ease: 'expo.inOut',
         });
-    }
-  };
-
-  /**
-   * 画像を保存する関数です。
-   * @param {number} maxCount - 最大保存数（デフォルト値: 192）
-   */
-  const savePicture = (maxCount = 192) => {
-    p.save(('' + count).padStart(3, '0') + '.png');
-    count++;
-    if (count > maxCount) {
-      p.noLoop();
     }
   };
 };
