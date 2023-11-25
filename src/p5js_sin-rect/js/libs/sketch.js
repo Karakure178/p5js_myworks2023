@@ -11,9 +11,10 @@ export const sketch = (p) => {
   let sinCurveNum;
 
   p.setup = () => {
-    const one = document.getElementById('one');
-    canvas = p.createCanvas(one.clientWidth, one.clientHeight);
-    canvas.parent(one);
+    const canvasid = document.getElementById('mycanvas');
+    canvas = p.createCanvas(canvasid.clientWidth, canvasid.clientHeight);
+    canvas.parent(canvasid);
+
     p.frameRate(24);
     p.rectMode(p.CENTER);
     motion(frame, true);
