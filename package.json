@@ -24,7 +24,8 @@
   "dependencies": {
     "canvas-capture": "^2.1.1",
     "gsap": "^3.12.2",
-    "p5": "^1.8.0"
+    "p5": "^1.8.0",
+    "pixi.js": "^7.3.2"
   },
   "browserslist": [
     "last 3 versions",
