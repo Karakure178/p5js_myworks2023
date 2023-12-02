@@ -6,6 +6,10 @@ import { circleVector, circleVectorDraw, interpolatedData_num } from './circle';
 export const sketch = () => {
   let app = []; // pixiアプリケーションを格納する変数
   let circle1; // 円を描画するためのpixi.jsのGraphicsクラス
+  let projectionTransform;
+  let rotation = 0;
+  let width, height;
+
   const canvas = document.getElementById('canvas'); // canvas要素を取得
   const frame = { count: 0 }; // モーション用のカウンター
 
@@ -22,12 +26,22 @@ export const sketch = () => {
 
     circleVector(app, circle1); // 円を描画
     motion(frame); // モーションを作成
+
+    width = app.screen.width;
+    height = app.screen.height;
+    projectionTransform = new PIXI.Matrix();
   };
 
   const draw = () => {
     // ここに描画処理を記述
     app.ticker.add(() => {
       circleVectorDraw(circle1, parseInt(frame.count));
+      // 実行順序が大事参考: https://codepen.io/sukantpal/pen/ZEQvKBB?editors=1010
+      projectionTransform.identity();
+      projectionTransform.rotate(rotation);
+      projectionTransform.translate(width / 2, height / 2);
+      rotation += 0.01;
+      app.stage.transform.setFromMatrix(projectionTransform);
     });
   };
 
@@ -41,6 +55,6 @@ const motion = (frame) => {
   gsap.timeline({ repeat: -1 }).to(frame, {
     count: interpolatedData_num - 1,
     duration: 3,
-    ease: 'linear',
+    ease: 'expo.inOut',
   });
 };
