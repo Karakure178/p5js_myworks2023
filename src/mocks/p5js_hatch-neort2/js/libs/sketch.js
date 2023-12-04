@@ -1,5 +1,9 @@
 import p5 from 'p5';
 
+/**
+ * ポストエフェクトを活用したアニメーションスケッチ
+ * @param {p5} p - The p5.js instance.
+ */
 export const sketch = function (p) {
   let maxNum = 100;
   let canvas;
@@ -164,6 +168,9 @@ export const sketch = function (p) {
 
     pg = p.createGraphics(p.width, p.height);
     image_init(pg);
+
+    pg_2 = p.createGraphics(p.width, p.height);
+    image_init(pg_2);
     theShader1 = p.createShader(shader1.vs, shader1.fs);
 
     color0 = rand_color('#F3EEEA');
@@ -173,55 +180,94 @@ export const sketch = function (p) {
   p.draw = function () {
     p.translate(-p.width / 2, -p.height / 2);
     p.background(220);
-    p.noFill();
 
-    pg.push();
-    pg.clear();
-    const colorCode = ['#776B5D', '#994D1C', '#DED0B6', '#FDF7E4'];
+    const circles = () => {
+      p.push();
+      pg.push();
+      pg.clear();
+      pg.background(220); // 透明にしたい場合はコメントアウト
+      const colorCode = ['#776B5D', '#994D1C', '#DED0B6', '#FDF7E4'];
 
-    pg.fill(colorCode[0]);
-    let load = new Loading(140, 150, 100, p.width / 2, p.height / 2, 10, 2, pg);
-    load.loading(count, p.radians(0));
+      pg.fill(colorCode[0]);
+      let s_load = new Loading(140, 150, 100, p.width / 2, p.height / 2, 10, 2, pg);
+      s_load.loading(count, p.radians(0));
 
-    pg.fill(colorCode[3]);
-    let load2 = new Loading(20, 80, 100, p.width / 2, p.height / 2, 10, 2, pg);
-    load2.loading(count, p.radians(15));
+      pg.fill(colorCode[3]);
+      let s_load2 = new Loading(20, 80, 100, p.width / 2, p.height / 2, 10, 2, pg);
+      s_load2.loading(count, p.radians(15));
 
-    pg.fill(colorCode[0]);
+      pg.fill(colorCode[0]);
 
-    let load3 = new Loading(50, 70, 100, p.width / 2, p.height / 2, 10, 2, pg);
-    load3.loading(50, p.radians(count));
+      let s_load3 = new Loading(50, 70, 100, p.width / 2, p.height / 2, 10, 2, pg);
+      s_load3.loading(50, p.radians(count));
 
-    pg.fill(colorCode[0]);
-    let load4 = new Loading(100, 130, 100, p.width / 2, p.height / 2, 10, 2, pg);
-    load4.loading(count, p.radians(150));
+      pg.fill(colorCode[0]);
+      let s_load4 = new Loading(100, 130, 100, p.width / 2, p.height / 2, 10, 2, pg);
+      s_load4.loading(count, p.radians(150));
 
-    pg.fill(colorCode[2]);
-    let load5 = new Loading(90, 200, 100, p.width / 2, p.height / 2, 10, 2, pg);
-    load5.loading(15, p.radians(count + 120));
-    load5.loading(15, p.radians(count + 240));
-    load5.loading(15, p.radians(count + 0));
+      pg.fill(colorCode[2]);
+      let s_load5 = new Loading(90, 200, 100, p.width / 2, p.height / 2, 10, 2, pg);
+      s_load5.loading(15, p.radians(count + 120));
+      s_load5.loading(15, p.radians(count + 240));
+      s_load5.loading(15, p.radians(count + 0));
 
-    pg.fill(colorCode[1]);
-    let load6 = new Loading(100, 170, 100, p.width / 2, p.height / 2, 10, 2, pg);
-    load6.loading(10, p.radians(count + 190));
-    load6.loading(10, p.radians(count + 70));
-    load6.loading(10, p.radians(count + 310));
+      pg.fill(colorCode[1]);
+      let s_load6 = new Loading(100, 170, 100, p.width / 2, p.height / 2, 10, 2, pg);
+      s_load6.loading(10, p.radians(count + 190));
+      s_load6.loading(10, p.radians(count + 70));
+      s_load6.loading(10, p.radians(count + 310));
 
-    p.shader(theShader1);
-    theShader1.setUniform(`u_tex`, pg);
-    theShader1.setUniform(`u_time`, -p.frameCount / 35);
-    theShader1.setUniform('u_resolution', [pg.width, pg.height]);
-    theShader1.setUniform('u_color', color0);
-    pg.pop();
+      p.shader(theShader1);
+      theShader1.setUniform(`u_tex`, pg);
+      theShader1.setUniform(`u_time`, -p.frameCount / 35);
+      theShader1.setUniform('u_resolution', [pg.width, pg.height]);
+      theShader1.setUniform('u_color', color0);
+      pg.pop();
+      p.image(pg, 0, 0);
+      p.pop();
+    };
 
+    const cirlces2 = () => {
+      p.push();
+      pg_2.push();
+      pg_2.clear();
+      pg_2.noFill();
+      pg_2.strokeWeight(3);
+      pg_2.stroke('#191919');
+      let load = new Loading(140, 150, 100, p.width / 2, p.height / 2, 10, 2, pg_2);
+      load.loading(count, p.radians(0));
+
+      let load2 = new Loading(20, 80, 100, p.width / 2, p.height / 2, 10, 2, pg_2);
+      load2.loading(count, p.radians(15));
+
+      let load3 = new Loading(50, 70, 100, p.width / 2, p.height / 2, 10, 2, pg_2);
+      load3.loading(50, p.radians(count));
+
+      let load4 = new Loading(100, 130, 100, p.width / 2, p.height / 2, 10, 2, pg_2);
+      load4.loading(count, p.radians(150));
+
+      let load5 = new Loading(90, 200, 100, p.width / 2, p.height / 2, 10, 2, pg_2);
+      load5.loading(15, p.radians(count + 120));
+      load5.loading(15, p.radians(count + 240));
+      load5.loading(15, p.radians(count + 0));
+
+      let load6 = new Loading(100, 170, 100, p.width / 2, p.height / 2, 10, 2, pg_2);
+      load6.loading(10, p.radians(count + 190));
+      load6.loading(10, p.radians(count + 70));
+      load6.loading(10, p.radians(count + 310));
+      pg_2.pop();
+
+      p.image(pg_2, 0, 0);
+      p.pop();
+    };
+
+    circles();
+    cirlces2();
     if (count < maxNum) {
       count++;
     } else {
       count = 0;
     }
-
-    p.image(pg, 0, 0);
   };
 
   p.keyPressed = function () {
@@ -233,7 +279,6 @@ export const sketch = function (p) {
 
   // createGraphicsの初期設定
   const image_init = (pg) => {
-    pg.background(220); // 透明にしたい場合はコメントアウト
     pg.noStroke();
     pg.fill('#776B5D');
   };
