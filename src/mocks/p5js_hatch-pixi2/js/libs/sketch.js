@@ -27,7 +27,7 @@ export const sketch = (p) => {
     theShader1 = p.createShader(shader1.vs, shader1.fs);
     //motion(frame);
 
-    color0 = rand_color('#FF90BC');
+    color0 = rand_color('#F3EEEA');
   };
 
   p.draw = () => {
@@ -36,7 +36,9 @@ export const sketch = (p) => {
     p.push();
     pg.background('#F3EEEA');
     pg.push();
-    pg.translate(100 * p.sin(p.radians(p.frameCount)), 0);
+    grid(4, pg);
+    pg.fill('#191919');
+    pg.translate(10, 0);
     grid(4, pg);
     pg.pop();
 
@@ -163,34 +165,43 @@ const shader1 = {
     vec2 uv = vTexCoord;
 
     // ハッチング: https://github.com/pixijs/filters/blob/main/filters/cross-hatch/src/crosshatch.frag
-    float hatch = 5.0;// ハッチングのサイズを変えられる
+    float hatch = 20.0;// ハッチングのサイズを変えられる
     float lum = length(texture2D(u_tex, uv.xy).rgb);
 
     vec4 tex = texture2D(u_tex, uv);
     gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+    bool isHatch = false;
 
     if (lum < 1.00){
       if (mod(gl_FragCoord.x + gl_FragCoord.y, hatch) == 0.0){
         gl_FragColor = tex;
+        isHatch = true;
       }
     }
 
     if (lum < 0.75){
       if (mod(gl_FragCoord.x - gl_FragCoord.y, hatch) == 0.0){
           gl_FragColor = tex;
+          isHatch = true;
       }
     }
 
     if (lum < 0.50){
       if (mod(gl_FragCoord.x + gl_FragCoord.y - 5.0, hatch) == 0.0){
           gl_FragColor = tex;
+          isHatch = true;
       }
     }
 
     if (lum < 0.3){
       if (mod(gl_FragCoord.x - gl_FragCoord.y - 5.0, hatch) == 0.0){
           gl_FragColor = tex;
+          isHatch = true;
       }
+    }
+
+    if(isHatch == false){
+      gl_FragColor = vec4(u_color, 1.0);
     }
 
 
@@ -199,7 +210,7 @@ const shader1 = {
     float strength = smoothstep(interval * 0.5, interval, interval - mod(u_time, interval));
     float whiteNoise = (random(uv + mod(u_time, 10.0)) * 2.0 - 1.0) * (0.15 + strength * 0.15);
 
-    //gl_FragColor = tex + whiteNoise;    
+   //gl_FragColor = tex ; //+ whiteNoise;    
   }
 `,
 };
