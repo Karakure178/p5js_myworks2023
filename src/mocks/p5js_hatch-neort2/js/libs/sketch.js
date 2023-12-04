@@ -3,11 +3,15 @@ import p5 from 'p5';
 export const sketch = function (p) {
   let maxNum = 100;
   let canvas;
+  let pg;
+  let pg_2;
+
+  let theShader1;
+  let color0;
 
   // 高さで分割してずらす
   function noiseWidth(xy, random_shift) {
     const heightSplit = p.height / random_shift.length; // heightNum分分割するときの高さ
-    console.log(heightSplit);
     for (let i = 0; i < random_shift.length; i++) {
       if (xy[1] < heightSplit * i && heightSplit * (i - 1) < xy[1]) {
         xy[0] += random_shift[i];
@@ -19,7 +23,7 @@ export const sketch = function (p) {
   }
 
   class Loading {
-    constructor(r, maxR, maxNum, w, h, heightNum, randomWidth) {
+    constructor(r, maxR, maxNum, w, h, heightNum, randomWidth, pg) {
       this.r = r;
       this.maxR = maxR;
       this.maxNum = maxNum;
@@ -27,6 +31,7 @@ export const sketch = function (p) {
       this.h = h; // 中心点
       this.heightNum = heightNum; // 高さの分割数
       this.random_shift = []; // 高さごとでずらす幅を代入する箱
+      this.pg = pg;
 
       // 分割する高さ分、高さごとでずらす幅を代入する
       for (let i = 0; i < this.heightNum; i++) {
@@ -57,11 +62,9 @@ export const sketch = function (p) {
 
         const xy_radian_width = noiseWidth(xy_radian, this.random_shift);
         points.push(new p5.Vector(xy_radian_width[0], xy_radian_width[1]));
-        //points.push(new p5.Vector(xy_radian[0], xy_radian[1]));
 
         const maxXY_radian_width = noiseWidth(maxXY_radian, this.random_shift);
         maxPoints.push(new p5.Vector(maxXY_radian_width[0], maxXY_radian_width[1]));
-        //maxPoints.push(new p5.Vector(maxXY_radian[0], maxXY_radian[1]));
       }
 
       const pointsLast = afin_translate(
@@ -74,7 +77,6 @@ export const sketch = function (p) {
 
       const pointsLast_radian_width = noiseWidth(pointsLast_radian, this.random_shift);
       points.push(new p5.Vector(pointsLast_radian_width[0], pointsLast_radian_width[1]));
-      //points.push(new p5.Vector(pointsLast_radian[0], pointsLast_radian[1]));
 
       const maxLast = afin_translate(
         this.maxR * p.cos(p.radians(angle * num)),
@@ -85,14 +87,12 @@ export const sketch = function (p) {
       const maxLast_radian = afin_rotate(rotate, maxLast[0], maxLast[1], this.w, this.h);
       const maxLast_radian_width = noiseWidth(maxLast_radian, this.random_shift);
       maxPoints.push(new p5.Vector(maxLast_radian_width[0], maxLast_radian_width[1]));
-      //maxPoints.push(new p5.Vector(maxLast_radian[0], maxLast_radian[1]));
       maxPoints.reverse();
 
       //ここから描画開始
-      p.beginShape();
+      this.pg.beginShape();
 
       // 最初の点だけ描画する
-      // TODO 配列化できない？
       const zeroVertex = afin_rotate(
         rotate,
         afin_translate(this.maxR * p.cos(p.radians(0)), this.maxR * p.sin(p.radians(0)), this.w, this.h)[0],
@@ -100,19 +100,17 @@ export const sketch = function (p) {
         this.w,
         this.h
       );
-      // TODO ノイズ処理の追加
       const zeroVertex_width = noiseWidth(zeroVertex, this.random_shift);
-      p.vertex(zeroVertex_width[0], zeroVertex_width[1]);
-      // p.vertex(zeroVertex[0], zeroVertex[1]);
+      this.pg.vertex(zeroVertex_width[0], zeroVertex_width[1]);
 
       for (let i = 0; i < (num + 1) * 2; i++) {
         if (i > num + 1 - 1) {
-          p.vertex(maxPoints[i - (num + 1)].x, maxPoints[i - (num + 1)].y);
+          this.pg.vertex(maxPoints[i - (num + 1)].x, maxPoints[i - (num + 1)].y);
         } else {
-          p.vertex(points[i].x, points[i].y);
+          this.pg.vertex(points[i].x, points[i].y);
         }
       }
-      p.endShape();
+      this.pg.endShape();
     }
   }
 
@@ -157,49 +155,73 @@ export const sketch = function (p) {
 
   p.setup = function () {
     const canvasid = document.getElementById('mycanvas');
-    canvas = p.createCanvas(canvasid.clientWidth, canvasid.clientHeight);
+    canvas = p.createCanvas(canvasid.clientWidth, canvasid.clientHeight, p.WEBGL);
     canvas.parent(canvasid);
 
     p.frameRate(24);
     p.translate(p.width / 2, p.height / 2);
     p.strokeWeight(3);
+
+    pg = p.createGraphics(p.width, p.height);
+    image_init(pg);
+    theShader1 = p.createShader(shader1.vs, shader1.fs);
+
+    color0 = rand_color('#F3EEEA');
   };
 
   let count = 0;
   p.draw = function () {
+    p.translate(-p.width / 2, -p.height / 2);
     p.background(220);
     p.noFill();
-    // lil-guiで数値管理したいね
-    let load = new Loading(140, 150, 100, p.width / 2, p.height / 2, 10, 2);
+
+    pg.push();
+    pg.clear();
+    const colorCode = ['#776B5D', '#994D1C', '#DED0B6', '#FDF7E4'];
+
+    pg.fill(colorCode[0]);
+    let load = new Loading(140, 150, 100, p.width / 2, p.height / 2, 10, 2, pg);
     load.loading(count, p.radians(0));
 
-    let load2 = new Loading(20, 80, 100, p.width / 2, p.height / 2, 10, 2);
+    pg.fill(colorCode[3]);
+    let load2 = new Loading(20, 80, 100, p.width / 2, p.height / 2, 10, 2, pg);
     load2.loading(count, p.radians(15));
 
-    let load3 = new Loading(50, 70, 100, p.width / 2, p.height / 2, 10, 2);
+    pg.fill(colorCode[0]);
+
+    let load3 = new Loading(50, 70, 100, p.width / 2, p.height / 2, 10, 2, pg);
     load3.loading(50, p.radians(count));
 
-    let load4 = new Loading(100, 130, 100, p.width / 2, p.height / 2, 10, 2);
+    pg.fill(colorCode[0]);
+    let load4 = new Loading(100, 130, 100, p.width / 2, p.height / 2, 10, 2, pg);
     load4.loading(count, p.radians(150));
 
-    let load5 = new Loading(90, 200, 100, p.width / 2, p.height / 2, 10, 2);
+    pg.fill(colorCode[2]);
+    let load5 = new Loading(90, 200, 100, p.width / 2, p.height / 2, 10, 2, pg);
     load5.loading(15, p.radians(count + 120));
     load5.loading(15, p.radians(count + 240));
     load5.loading(15, p.radians(count + 0));
 
-    let load6 = new Loading(100, 170, 100, p.width / 2, p.height / 2, 10, 2);
-
+    pg.fill(colorCode[1]);
+    let load6 = new Loading(100, 170, 100, p.width / 2, p.height / 2, 10, 2, pg);
     load6.loading(10, p.radians(count + 190));
     load6.loading(10, p.radians(count + 70));
     load6.loading(10, p.radians(count + 310));
 
-    //
+    p.shader(theShader1);
+    theShader1.setUniform(`u_tex`, pg);
+    theShader1.setUniform(`u_time`, -p.frameCount / 35);
+    theShader1.setUniform('u_resolution', [pg.width, pg.height]);
+    theShader1.setUniform('u_color', color0);
+    pg.pop();
+
     if (count < maxNum) {
       count++;
     } else {
       count = 0;
     }
-    //
+
+    p.image(pg, 0, 0);
   };
 
   p.keyPressed = function () {
@@ -208,4 +230,114 @@ export const sketch = function (p) {
       p.saveGif('p5js_circles-noise', 4);
     }
   };
+
+  // createGraphicsの初期設定
+  const image_init = (pg) => {
+    pg.background(220); // 透明にしたい場合はコメントアウト
+    pg.noStroke();
+    pg.fill('#776B5D');
+  };
+
+  const rand_color = (colorCode) => {
+    let rc = p.color(colorCode);
+    return [p.red(rc) / 255.0, p.green(rc) / 255.0, p.blue(rc) / 255.0];
+  };
+};
+
+const shader1 = {
+  vs: `
+  precision highp float;
+  precision highp int;
+
+  attribute vec3 aPosition;
+  attribute vec2 aTexCoord;
+
+  varying vec2 vTexCoord;
+
+  uniform mat4 uProjectionMatrix;
+  uniform mat4 uModelViewMatrix;
+
+  void main() {
+    vec4 positionVec4 = vec4(aPosition, 1.0);
+    gl_Position = uProjectionMatrix * uModelViewMatrix * positionVec4;
+    vTexCoord = aTexCoord;
+
+  }
+`,
+  fs: `
+  precision highp float;
+  precision highp int;
+
+  varying vec2 vTexCoord;
+
+  uniform sampler2D u_tex;
+  uniform float u_time;
+  uniform vec2 u_resolution;
+
+  uniform vec3 u_color;
+
+  float PI = 3.14159265358979;
+
+  float map(float value, float min1, float max1, float min2, float max2) {
+    return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
+  }
+
+  // iosだと動かない可能性がある:https://byteblacksmith.com/improvements-to-the-canonical-one-liner-glsl-rand-for-opengl-es-2-0/
+  float random(vec2 c){
+    return fract(sin(dot(c.xy ,vec2(12.9898,78.233))) * 43758.5453);
+  }
+
+  void main() {
+    vec2 st = gl_FragCoord.xy/u_resolution.xy;
+    vec2 uv = vTexCoord;
+
+    // ハッチング: https://github.com/pixijs/filters/blob/main/filters/cross-hatch/src/crosshatch.frag
+    float hatch = 8.0;// ハッチングのサイズを変えられる
+    float lum = length(texture2D(u_tex, uv.xy).rgb);
+
+    vec4 tex = texture2D(u_tex, uv);
+    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+    bool isHatch = false;
+
+    if (lum < 1.00){
+      if (mod(gl_FragCoord.x + gl_FragCoord.y, hatch) == 0.0){
+        gl_FragColor = tex;
+        isHatch = true;
+      }
+    }
+
+    if (lum < 0.75){
+      if (mod(gl_FragCoord.x - gl_FragCoord.y, hatch) == 0.0){
+          gl_FragColor = tex;
+          isHatch = true;
+      }
+    }
+
+    if (lum < 0.50){
+      if (mod(gl_FragCoord.x + gl_FragCoord.y - 5.0, hatch) == 0.0){
+          gl_FragColor = tex;
+          isHatch = true;
+      }
+    }
+
+    if (lum < 0.3){
+      if (mod(gl_FragCoord.x - gl_FragCoord.y - 5.0, hatch) == 0.0){
+          gl_FragColor = tex;
+          isHatch = true;
+      }
+    }
+
+    if(isHatch == false){
+      gl_FragColor = vec4(u_color, 1.0);
+    }
+
+
+    // white noise用
+    float interval = 3.0;
+    float strength = smoothstep(interval * 0.5, interval, interval - mod(u_time, interval));
+    float whiteNoise = (random(uv + mod(u_time, 10.0)) * 2.0 - 1.0) * (0.15 + strength * 0.15);
+
+   //gl_FragColor = tex ; //+ whiteNoise;    
+  }
+`,
 };
