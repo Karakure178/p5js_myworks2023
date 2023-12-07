@@ -174,7 +174,7 @@ export const sketch = function (p) {
     pg_2 = p.createGraphics(p.width, p.height);
     image_init(pg_2);
 
-    pg_blur = p.createGraphics(p.width, p.height);
+    pg_blur = p.createGraphics(p.width, p.height, p.WEBGL);
     image_init(pg_blur);
 
     theShader1 = p.createShader(shader1.vs, shader1.fs);
@@ -290,11 +290,11 @@ export const sketch = function (p) {
     p.push();
     pg_blur.push();
     pct(pg_blur);
-    // p.shader(theShader_blur);
-    // theShader_blur.setUniform(`u_tex`, pg_blur);
-    // theShader_blur.setUniform(`u_time`, -p.frameCount / 35);
-    // theShader_blur.setUniform('u_resolution', [pg_blur.width, pg_blur.height]);
-    // theShader_blur.setUniform('u_color', color0);
+    pg_blur.shader(theShader_blur);
+    theShader_blur.setUniform(`u_tex`, pg_blur);
+    theShader_blur.setUniform(`u_time`, -p.frameCount / 35);
+    theShader_blur.setUniform('u_resolution', [pg_blur.width, pg_blur.height]);
+    theShader_blur.setUniform('u_color', color0);
     p.tint(255, 100); // https://www.fabiofranchino.com/log/how-to-change-the-opacity-of-an-image-in-p5-js/
     p.image(pg_blur, 0, 0);
     pg_blur.pop();
