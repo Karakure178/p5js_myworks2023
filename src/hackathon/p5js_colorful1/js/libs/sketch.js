@@ -1,31 +1,59 @@
+import { gridPosition } from './pg';
+import { border, stripe } from './functions/stripe';
+
 /**
  * ハッカソン用スケッチ
  * @param {p5} p - The p5.js instance.
  */
 export const sketch = (p) => {
   let canvas;
-  let pg;
-  const frame = { count: 0 };
+  let pg_group;
+  const colors = [
+    ['#9EC8B9', '#5C8374', '#1B4242', '#092635'],
+    ['#F0ECE5', '#B6BBC4', '#31304D', '#161A30'],
+    ['#ECF4D6', '#9AD0C2', '#2D9596', '#2D9596'],
+    ['#FAE7C9', '#E1C78F', '#B0926A', '#706233'],
+    ['#FFC7C7', '#ED9ED6', '#C683D7', '#7071E8'],
+    ['#F9DEC9', '#F78CA2', '#D80032', '#3D0C11'],
+    ['#EBE4D1', '#B4B4B3', '#26577C', '#E55604'],
+    ['#FFFADD', '#FFCC70', '#8ECDDD', '#22668D'],
+    ['#EEE2DE', '#EA906C', '#B31312', '#2B2A4C'],
+    ['#C5FFF8', '#96EFFF', '#5FBDFF', '#7B66FF'],
+    ['#E9E6C9', '#CA6144', '#566683', '#393E51'],
+  ];
 
   p.setup = () => {
     const canvasid = document.getElementById('mycanvas');
     canvas = p.createCanvas(canvasid.clientWidth, canvasid.clientHeight, p.WEBGL);
     canvas.parent(canvasid);
+    p.translate(-p.width / 2, -p.height / 2);
 
-    pg = p.createGraphics(p.width, p.height);
-    image_init(pg);
-
-    motion(frame);
+    pg_group = gridPosition(p, 3, colors);
+    for (let i = 0; i < pg_group.pgs.length; i++) {
+      const funcNum = pg_group.rand[i];
+      const pg = pg_group.pgs[i];
+      if (funcNum === 1) {
+        stripe(pg, pg_group.colors[i][0], pg_group.colors[i][1]);
+      } else if (funcNum === 2) {
+        border(pg, pg_group.colors[i][0], pg_group.colors[i][1]);
+      }
+      //else if (funcNum === 3) {
+      // } else if (funcNum === 4) {
+      // } else if (funcNum === 5) {
+      // } else if (funcNum === 6) {
+      // } else if (funcNum === 7) {
+      // } else if (funcNum === 8) {
+      // } else if (funcNum === 9) {
+      // }
+      p.image(pg_group.pgs[i], pg_group.res[i].x, pg_group.res[i].y);
+    }
   };
 
   p.draw = () => {
-    p.background('#F3EEEA');
-    p.translate(-p.width / 2, -p.height / 2);
-
-    pg.push();
+    //p.background('#F3EEEA');
+    //pg.push();
     //pg.translate(p.width / 2, p.height / 2);
-    pg.pop();
-
+    //pg.pop();
     // const theShader1 = p.createShader(shader1.vs, shader1.fs);
     // const aperture = p.map(frame.count, 0, 1, 180, 90);
     // p.shader(theShader1);
@@ -33,7 +61,6 @@ export const sketch = (p) => {
     // theShader1.setUniform(`u_time`, -p.frameCount / 35);
     // theShader1.setUniform(`u_aperture`, aperture);
     // theShader1.setUniform('u_resolution', [pg.width, pg.height]);
-    p.image(pg, 0, 0);
   };
 
   p.keyPressed = () => {
@@ -42,6 +69,4 @@ export const sketch = (p) => {
       p.saveGif('p5js_fisheye', 4);
     }
   };
-
-  //
 };
