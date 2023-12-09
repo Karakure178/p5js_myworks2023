@@ -2,7 +2,7 @@
  * @function gridPosition
  * @param {p5} p - The p5.js instance.
  * @param  {Number} s - 画面の分割数
- * @return {Object} pg_group - 分割した画面の座標と番号
+ * @return {Object} pg_group - 分割した画面の座標と番号,color配列
  */
 export const gridPosition = (p, s, c) => {
   const pgs = []; //pg保存用
@@ -33,7 +33,7 @@ export const gridPosition = (p, s, c) => {
       res.push(p.createVector(x * i, y * j));
 
       // TODO関数用に書く
-      const random = Math.floor(p.random(1, s));
+      const random = Math.floor(p.random(1, 10));
       randoms.push(random);
       colors.push(color);
       c = newC;

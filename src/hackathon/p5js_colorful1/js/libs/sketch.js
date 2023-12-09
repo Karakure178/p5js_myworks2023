@@ -1,5 +1,8 @@
 import { gridPosition } from './pg';
 import { border, stripe } from './functions/stripe';
+import { grid } from './functions/grid';
+import { gridLine } from './functions/gridLine';
+import { bear } from './functions/bear';
 
 /**
  * ハッカソン用スケッチ
@@ -33,14 +36,29 @@ export const sketch = (p) => {
       const funcNum = pg_group.rand[i];
       const pg = pg_group.pgs[i];
       if (funcNum === 1) {
-        stripe(pg, pg_group.colors[i][0], pg_group.colors[i][1]);
+        // 縞模様
+        stripe(pg, pg_group.colors[i][1], pg_group.colors[i][2]);
       } else if (funcNum === 2) {
-        border(pg, pg_group.colors[i][0], pg_group.colors[i][1]);
+        // ボーだー
+        border(pg, pg_group.colors[i][1], pg_group.colors[i][2]);
+      } else if (funcNum === 3) {
+        // グリッド
+        const num = Math.floor(p.random(2, 10));
+        grid(pg, num, pg_group.colors[i][1], pg_group.colors[i][2]);
+      } else if (funcNum === 4) {
+        // エビ or 線
+        gridLine(pg, p, pg_group.colors[i][1], pg_group.colors[i][2]);
+      } else if (funcNum === 5) {
+        // くま
+        for (let j = 0; j < 130; j++) {
+          const x = p.random(0, pg.width);
+          const y = p.random(0, pg.height);
+          const rand = Math.floor(p.random(0, pg_group.pgs.length));
+          const colors = pg_group.colors[rand];
+          bear(pg, p, x, y, pg.width / 5, colors[1], colors[2], colors[3]);
+        }
       }
-      //else if (funcNum === 3) {
-      // } else if (funcNum === 4) {
-      // } else if (funcNum === 5) {
-      // } else if (funcNum === 6) {
+      //else if (funcNum === 6) {
       // } else if (funcNum === 7) {
       // } else if (funcNum === 8) {
       // } else if (funcNum === 9) {
