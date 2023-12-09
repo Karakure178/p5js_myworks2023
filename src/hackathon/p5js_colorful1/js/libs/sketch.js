@@ -3,6 +3,7 @@ import { border, stripe } from './functions/stripe';
 import { grid } from './functions/grid';
 import { gridLine } from './functions/gridLine';
 import { bear } from './functions/bear';
+import { circles } from './functions/circles';
 
 /**
  * ハッカソン用スケッチ
@@ -31,7 +32,9 @@ export const sketch = (p) => {
     canvas.parent(canvasid);
     p.translate(-p.width / 2, -p.height / 2);
 
-    pg_group = gridPosition(p, 3, colors);
+    // 以降処理開始
+    const num = 3; // 画面の分割数 num*num分カラーがいる
+    pg_group = gridPosition(p, num, colors);
     for (let i = 0; i < pg_group.pgs.length; i++) {
       const funcNum = pg_group.rand[i];
       const pg = pg_group.pgs[i];
@@ -57,9 +60,10 @@ export const sketch = (p) => {
           const colors = pg_group.colors[rand];
           bear(pg, p, x, y, pg.width / 5, colors[1], colors[2], colors[3]);
         }
+      } else if (funcNum === 6) {
+        circles(pg, p, pg_group.colors[i][1], pg_group.colors[i][2]);
       }
-      //else if (funcNum === 6) {
-      // } else if (funcNum === 7) {
+      //else if (funcNum === 7) {
       // } else if (funcNum === 8) {
       // } else if (funcNum === 9) {
       // }

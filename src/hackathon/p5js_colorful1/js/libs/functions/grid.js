@@ -2,7 +2,6 @@
  * @method grid
  * @param {p5.Graphics} pg - 描画用レイヤー
  * @param {Number} num - 画面の分割数
- *
  */
 export const grid = (pg, num, c1, c2) => {
   // ランダムパターンを入れ込む
