@@ -4,6 +4,7 @@ import { grid } from './functions/grid';
 import { gridLine } from './functions/gridLine';
 import { bear } from './functions/bear';
 import { circles } from './functions/circles';
+import { pGrid } from './functions/gridPattern';
 
 /**
  * ハッカソン用スケッチ
@@ -38,6 +39,7 @@ export const sketch = (p) => {
     for (let i = 0; i < pg_group.pgs.length; i++) {
       const funcNum = pg_group.rand[i];
       const pg = pg_group.pgs[i];
+
       if (funcNum === 1) {
         // 縞模様
         stripe(pg, pg_group.colors[i][1], pg_group.colors[i][2]);
@@ -62,9 +64,11 @@ export const sketch = (p) => {
         }
       } else if (funcNum === 6) {
         circles(pg, p, pg_group.colors[i][1], pg_group.colors[i][2]);
+      } else if (funcNum === 7) {
+        const rand = Math.floor(p.random(2, 10));
+        pGrid(pg, p, rand, pg_group.colors[i][1], pg_group.colors[i][2]);
       }
-      //else if (funcNum === 7) {
-      // } else if (funcNum === 8) {
+      //else if (funcNum === 8) {
       // } else if (funcNum === 9) {
       // }
       p.image(pg_group.pgs[i], pg_group.res[i].x, pg_group.res[i].y);
