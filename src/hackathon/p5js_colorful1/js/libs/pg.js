@@ -6,6 +6,7 @@
  */
 export const gridPosition = (p, s, c) => {
   const pgs = []; //pg保存用
+  const pgs_erase = []; //pgでくり抜き用
   const res = []; //座標保存用
   const randoms = []; //ランダムな番号振り分け用
   const colors = [];
@@ -29,7 +30,9 @@ export const gridPosition = (p, s, c) => {
       });
 
       const pg = image_init(p, x, x, color[0]);
+      const pg_erase = image_init(p, x, x, color[0]);
       pgs.push(pg);
+      pgs_erase.push(pg_erase);
       res.push(p.createVector(x * i, y * j));
 
       // TODO関数用に書く
@@ -41,10 +44,11 @@ export const gridPosition = (p, s, c) => {
   }
 
   /** createGraphicsの初期設定object
-   * @type {{pgs:Array,res:Array,rand:Array,colors:Array}}
+   * @type {{pgs:Array,pgs_erase:Array,res:Array,rand:Array,colors:Array}}
    */
   const pg_group = {
     pgs: pgs,
+    pgs_erase: pgs_erase,
     res: res,
     rand: randoms,
     colors: colors,
@@ -65,10 +69,8 @@ export const gridPosition = (p, s, c) => {
 const image_init = (p, w, h, c) => {
   const pg = p.createGraphics(w, h);
   pg.background(c);
-  pg.stroke(20);
   pg.strokeWeight(3);
   pg.noStroke();
   pg.fill('#776B5D');
-  //pg.rectMode(p.CENTER);
   return pg;
 };

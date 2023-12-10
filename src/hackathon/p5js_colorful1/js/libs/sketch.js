@@ -10,6 +10,7 @@ import { cloverGrid } from './functions/clover';
 
 /**
  * ハッカソン用スケッチ
+ * @author Karakure178
  * @param {p5} p - The p5.js instance.
  */
 export const sketch = (p) => {
@@ -38,6 +39,7 @@ export const sketch = (p) => {
     // 以降処理開始
     const num = 3; // 画面の分割数 num*num分カラーがいる
     pg_group = gridPosition(p, num, colors);
+    // ここで関数分けをする
     for (let i = 0; i < pg_group.pgs.length; i++) {
       const funcNum = pg_group.rand[i];
       const pg = pg_group.pgs[i];
@@ -57,6 +59,7 @@ export const sketch = (p) => {
         gridLine(pg, p, pg_group.colors[i][1], pg_group.colors[i][2]);
       } else if (funcNum === 5) {
         // くま
+        pg.push();
         for (let j = 0; j < 130; j++) {
           const x = p.random(0, pg.width);
           const y = p.random(0, pg.height);
@@ -64,6 +67,11 @@ export const sketch = (p) => {
           const colors = pg_group.colors[rand];
           bear(pg, p, x, y, pg.width / 5, colors[1], colors[2], colors[3]);
         }
+        pg.strokeWeight(20);
+        pg.stroke('#FF9209');
+        pg.noFill();
+        pg.rect(0, 0, pg.width, pg.height);
+        pg.pop();
       } else if (funcNum === 6) {
         circles(pg, p, pg_group.colors[i][1], pg_group.colors[i][2]);
       } else if (funcNum === 7) {
@@ -80,6 +88,68 @@ export const sketch = (p) => {
         cloverGrid(pg, p, Math.floor(p.random(2, 8)), c1, c2);
       }
       p.image(pg_group.pgs[i], pg_group.res[i].x, pg_group.res[i].y);
+    }
+
+    // ここでerase使うか否かを分ける
+    for (let i = 0; i < pg_group.pgs.length; i++) {
+      const pg = pg_group.pgs_erase[i];
+      const funcNum = pg_group.rand[i];
+
+      if (funcNum === 1) {
+        pg.push();
+        pg.rectMode(p.CENTER);
+        pg.translate(pg.width / 2, pg.height / 2);
+        pg.erase();
+        pg.rect(0, 0, pg.width / 1.1, pg.height / 1.1);
+        pg.noErase();
+        pg.pop();
+        p.image(pg, pg_group.res[i].x, pg_group.res[i].y);
+      } else if (funcNum === 2) {
+        pg.push();
+        pg.rectMode(p.CENTER);
+        pg.translate(pg.width / 2, pg.height / 2);
+        pg.erase();
+        pg.rect(0, 0, pg.width / 1.4, pg.height / 1.4);
+        pg.noErase();
+        pg.pop();
+        p.image(pg, pg_group.res[i].x, pg_group.res[i].y);
+      } else if (funcNum === 3) {
+        pg.push();
+        pg.translate(pg.width / 2, pg.height / 2);
+        pg.erase();
+        pg.circle(0, 0, pg.width / 1.3);
+        pg.noErase();
+        pg.pop();
+        p.image(pg, pg_group.res[i].x, pg_group.res[i].y);
+      }
+    }
+
+    // ここでどのシェーダーを使うかわける
+    const randShader = Math.floor(p.random(1, 4));
+    if (randShader === 1) {
+      //
+      // const theShader1 = p.createShader(shader1.vs, shader1.fs);
+      // const aperture = p.map(frame.count, 0, 1, 180, 90);
+      // p.shader(theShader1);
+      // theShader1.setUniform(`u_tex`, pg);
+      // theShader1.setUniform(`u_time`, -p.frameCount / 35);
+      // theShader1.setUniform(`u_aperture`, aperture);
+      // theShader1.setUniform('u_resolution', [pg.width, pg.height]);
+    } else if (randShader === 2) {
+      // 魚眼レンズ
+      // const theShader1 = p.createShader(shader1.vs, shader1.fs);
+      // const aperture = p.map(frame.count, 0, 1, 180, 90);
+      // p.shader(theShader1);
+      // theShader1.setUniform(`u_tex`, pg);
+      // theShader1.setUniform(`u_time`, -p.frameCount / 35);
+      // theShader1.setUniform(`u_aperture`, aperture);
+      // theShader1.setUniform('u_resolution', [pg.width, pg.height]);
+    } else {
+      // ノーマル：変化なし
+      // const theShader1 = p.createShader(shader1.vs, shader1.fs);
+      // const aperture = p.map(frame.count, 0, 1, 180, 90);
+      // p.shader(theShader1);
+      // theShader1.setUniform(`u_tex`, pg);
     }
   };
 
