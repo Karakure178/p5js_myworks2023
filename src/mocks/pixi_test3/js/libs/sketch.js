@@ -19,12 +19,12 @@ export const sketch = () => {
     height: imgReso.height,
     backgroundColor: 0x061639,
     antialias: true,
-    resolution: window.devicePixelRatio || 1,
+    resolution: 1,
   };
+  //  resolution: window.devicePixelRatio || 1,
 
   // 画面サイズに合わせてcanvasのサイズを変更
   init_app.width = window.innerWidth;
-  console.log(window.innerWidth);
   init_app.height = ratioCalculation(init_app.width, imgReso.height, imgReso.width);
 
   // setup関数とdraw関数を定義
@@ -45,11 +45,11 @@ export const sketch = () => {
     });
   };
 
+  // ここに描画処理を記述
   const draw = () => {
-    // ここに描画処理を記述
     app.ticker.add(() => {
-      // img.width = window.innerWidth;
-      // img.height = ratioCalculation(img.width, imgReso.height,imgReso.width);
+      //img.width = 1000; //window.innerWidth;
+      //img.height = ratioCalculation(img.width, imgReso.height, img.width);
     });
   };
 
