@@ -6,6 +6,7 @@ import { bear } from './functions/bear';
 import { circles } from './functions/circles';
 import { pGrid } from './functions/gridPattern';
 import { sinWave } from './functions/wave';
+import { cloverGrid } from './functions/clover';
 
 /**
  * ハッカソン用スケッチ
@@ -72,9 +73,12 @@ export const sketch = (p) => {
         const c1 = pg_group.colors[i][1];
         const c2 = pg_group.colors[i][2];
         sinWave(pg, p, 0, 0, pg.width, pg.height, 60, c1, c2);
+      } else if (funcNum === 9) {
+        // クローバー
+        const c1 = pg_group.colors[i][1];
+        const c2 = pg_group.colors[i][2];
+        cloverGrid(pg, p, Math.floor(p.random(2, 8)), c1, c2);
       }
-      //else if (funcNum === 9) {
-      // }
       p.image(pg_group.pgs[i], pg_group.res[i].x, pg_group.res[i].y);
     }
   };

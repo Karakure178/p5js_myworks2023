@@ -1,7 +1,7 @@
 /** 大き目の円を生成する
  * @function circles
  * @param {p5.Graphics} pg - 描画用レイヤー
- * @param {Number} p - 画面の分割数
+ * @param {p5} p - p5インスタンス
  * @param {string} c1 - 色1
  * @param {string} c2 - 色2
  */

@@ -8,6 +8,8 @@
  * @param  {Number}        w        最大幅
  * @param  {Number}        h        最大高さ
  * @param  {Number}        t        sinカーブの隙間
+ * @param  {string}        c1       色1
+ * @param  {string}        c2       色2
  */
 export const sinWave = (pgs, p, sw, sh, w, h, t, c1, c2) => {
   const pg = p.createGraphics(w, h);
@@ -36,31 +38,3 @@ export const sinWave = (pgs, p, sw, sh, w, h, t, c1, c2) => {
   }
   pgs.image(pg, sw, sh);
 };
-
-/**
- * サインカーブそのものを描画する関数
- * @function base
- * @param  {p5.Graphics}   pg      描画用レイヤー
- * @param  {p5}            p       p5インスタンス
- * @param  {Number}        r       sinの波の大きさ
- * @param  {Number}        fre     角振動数
- * @param  {p5.color}      color   color変数
- * @param  {Number}        sw      最小幅
- * @param  {Number}        w       最大幅
- * @param  {Number}        h       最大高さ
- * @private
- */
-function base(pg, p, r, fre, color, sw, w, h) {
-  // pg.push();
-  pg.beginShape();
-  // pg.vertex(sw, h);
-  // pg.fill(color);
-  // for (let i = 0; i < w; i += 5) {
-  //   const y = r * p.sin(p.radians(i * fre)) + h;
-  //   const x = i;
-  //   pg.vertex(x, y);
-  // }
-  // pg.vertex(w, h);
-  pg.endShape(p.CLOSE);
-  // pg.pop();
-}
