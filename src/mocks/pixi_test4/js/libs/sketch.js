@@ -7,6 +7,9 @@ export const sketch = () => {
   let app = []; // pixiアプリケーションを格納する変数
   let img; // 画像を格納する変数
 
+  let is_prev = false;
+  let is_next = false;
+
   const canvas = document.getElementById('canvas'); // canvas要素を取得
   const frame = { count: 5 }; // モーション用のカウンター
   const imgReso = {
@@ -43,19 +46,38 @@ export const sketch = () => {
       img = new PIXI.Sprite(bg1);
       app.stage.addChild(img);
     });
-    onAssetsLoaded(app);
+    //onAssetsLoaded(app);
+
+    //  以降ボタン処理
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+
+    prev.addEventListener('click', () => {
+      is_prev = true;
+      console.log('prevがクリックされました');
+    });
+
+    next.addEventListener('click', () => {
+      is_next = true;
+      console.log('nextがクリックされました');
+    });
   };
 
   // ここに描画処理を記述
   const draw = () => {
     app.ticker.add(() => {
+      if (is_prev) {
+        img.x += 10;
+        if (img.x > img.width) is_prev = false;
+      }
+
       //img.width = 1000; //window.innerWidth;
       //img.height = ratioCalculation(img.width, imgReso.height, img.width);
     });
   };
 
   setup(); // pixiアプリケーションをセットアップ
-  // draw(); // pixiアプリケーションを描画
+  draw(); // pixiアプリケーションを描画
 };
 
 // gsapを使ったモーション作成
