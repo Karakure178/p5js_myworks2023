@@ -1,0 +1,39 @@
+html,
+body {
+  margin: 0;
+  align-items: center;
+  text-align: center;
+}
+
+
+.main{
+  background-color: black;
+}
+
+p{
+  color: white;
+  font-size: 20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+
+/* 以降キャンバス設定 */
+#canvas {
+  width: 100vw;
+}
+
+.canvasButton{
+position: fixed;
+top: 0;
+z-index: 100;
+background-color: black;
+width: 10rem;
+height: 4rem;
+color: white;
+
+}
+
+.canvasButton:hover{
+  background-color: gray;
+  color: black;
+}

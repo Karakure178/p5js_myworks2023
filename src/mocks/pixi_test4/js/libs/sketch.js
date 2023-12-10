@@ -97,21 +97,18 @@ const fragment = `
 
   float PI = 3.14159265358979;
 
-  float random(vec2 c){
-    return fract(sin(dot(c.xy ,vec2(12.9898,78.233))) * 43758.5453);
-  }
-  
-  void main()
-  {
-    //vec2 uv = vec2(vTextureCoord.x, 1.-vTextureCoord.y);
+  void main() {
     vec2 uv = vTextureCoord;
-
-    // white noise用
-    float interval = 3.0;
-    float strength = smoothstep(interval * 0.5, interval, interval - mod(u_time, interval));
-    float whiteNoise = (random(uv + mod(u_time, 10.0)) * 2.0 - 1.0) * (0.15 + strength * 0.15);
-
     vec4 tex = texture2D(u_tex, uv);
-    gl_FragColor = tex + whiteNoise;
+
+    // 走査線を書く
+    float scanLineInterval = 1500.0; // 大きいほど幅狭く
+    float scanLineSpeed = u_time * 5.0; // 走査線移動速度
+    float scanLine = max(1.0, sin(uv.y * scanLineInterval + scanLineSpeed) * 1.6);
+
+    tex.rgb *= scanLine;
+
+
+    gl_FragColor = tex;
   }
 `;
