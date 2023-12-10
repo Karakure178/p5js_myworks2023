@@ -53,7 +53,6 @@ export const gridPosition = (p, s, c) => {
     rand: randoms,
     colors: colors,
   };
-  console.log(c);
 
   return pg_group;
 };

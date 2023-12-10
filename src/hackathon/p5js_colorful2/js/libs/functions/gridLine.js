@@ -33,13 +33,12 @@ export const gridLine = (pg, p, c1, c2) => {
             break;
           default:
             pg.stroke(c1);
-            pg.stroke(5);
+            pg.strokeWeight(5);
             pg.line(x, y, x + d, y + d);
             pg.line(x, y, x - d, y - d);
             pg.line(x, y, x + d, y);
             pg.line(x, y, x, y + d);
         }
-        // test2(x, y, x - d, y + d);
       } else {
         switch (rand) {
           case 1:
@@ -47,7 +46,7 @@ export const gridLine = (pg, p, c1, c2) => {
             break;
           default:
             pg.stroke(c1);
-            pg.stroke(5);
+            pg.strokeWeight(5);
             pg.line(x + d, y, x, y - d);
             pg.line(x - d, y, x, y + d);
             pg.line(x, y + d, x + d, y);

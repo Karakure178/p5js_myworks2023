@@ -11,7 +11,6 @@ import { shaderNormal } from './shaders/normal';
 import { shaderScan } from './shaders/scanline';
 import { shaderFish } from './shaders/fisheye';
 import { shaderNoise } from './shaders/whiteNoise';
-import { shaderHatch } from './shaders/hatch';
 
 /**
  * ハッカソン用スケッチ
@@ -157,14 +156,6 @@ export const sketch = (p) => {
       theShader1.setUniform(`u_tex`, pg_total);
       theShader1.setUniform(`u_time`, -p.frameCount / 35);
       theShader1.setUniform('u_resolution', [pg_total.width, pg_total.height]);
-    } else if (randShader === 4) {
-      // ハッチング
-      console.log('hatch');
-      const theShader1 = p.createShader(shaderHatch.vs, shaderHatch.fs);
-      p.shader(theShader1);
-      theShader1.setUniform(`u_tex`, pg_total);
-      theShader1.setUniform(`u_time`, -p.frameCount / 35);
-      theShader1.setUniform('u_resolution', [pg_total.width, pg_total.height]);
     } else {
       // ノーマル：変化なし
       const theShader1 = p.createShader(shaderNormal.vs, shaderNormal.fs);
@@ -173,20 +164,6 @@ export const sketch = (p) => {
     }
 
     p.image(pg_total, 0, 0);
-  };
-
-  p.draw = () => {
-    //p.background('#F3EEEA');
-    //pg.push();
-    //pg.translate(p.width / 2, p.height / 2);
-    //pg.pop();
-    // const theShader1 = p.createShader(shader1.vs, shader1.fs);
-    // const aperture = p.map(frame.count, 0, 1, 180, 90);
-    // p.shader(theShader1);
-    // theShader1.setUniform(`u_tex`, pg);
-    // theShader1.setUniform(`u_time`, -p.frameCount / 35);
-    // theShader1.setUniform(`u_aperture`, aperture);
-    // theShader1.setUniform('u_resolution', [pg.width, pg.height]);
   };
 
   p.keyPressed = () => {

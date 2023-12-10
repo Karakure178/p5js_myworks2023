@@ -16,8 +16,9 @@ export const circles = (pg, p, c1, c2) => {
     let pct = i / num;
     pct = p.pow(pct, 2);
     let d = pct * diameter;
-    const color_mix = p.lerpColor(p.color(c2), p.color(c1), num / d);
-    pg.fill(color_mix);
+    pg.fill(c2);
+    if (i % 2 === 0) pg.fill(c1);
+
     pg.circle(randX, randY, d);
     pg.drawingContext.filter = 'drop-shadow(1px 2px 1px rgb(255,255,255))';
   }

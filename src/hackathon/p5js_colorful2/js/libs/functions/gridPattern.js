@@ -17,7 +17,7 @@ export const pGrid = (pgs, p, num, c1, c2) => {
       const x = nw * i + margin_left * (i + 1);
       const y = nh * j + margin_bottom * (j + 1);
 
-      grid(3, pg, p.radians(90 * (j + i)), c1, c2);
+      gridC(3, pg, p.radians(90 * (j + i)), c1, c2);
       pgs.image(pg, x, y);
     }
   }
@@ -25,7 +25,7 @@ export const pGrid = (pgs, p, num, c1, c2) => {
 
 /** num個で分割したグリッドをグラフィックスいっぱいに生成する
  * グリッド内に三つの丸角四角をを生成する
- * @function grid
+ * @function gridC
  * @param {Number}             num      グラフィックスの分割数
  * @param {p5.Graphics object} pg       分割するグラフィックス画面
  * @param {Number}             r        回転する角度
@@ -33,7 +33,7 @@ export const pGrid = (pgs, p, num, c1, c2) => {
  * @param {string} c2 - 色2
  * @private
  */
-const grid = (num, pg, r, c1, c2) => {
+const gridC = (num, pg, r, c1, c2) => {
   pg.push();
   const n1 = num + 1;
   const margin_left = pg.width / n1 / n1;
