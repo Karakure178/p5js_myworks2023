@@ -4,17 +4,18 @@ import { ratioCalculation } from './utils/ratioCalculation';
 import { map } from './utils/map';
 
 let img_path = [
-  '../../mocks/pixi_test5/images/test1.png',
-  '../../mocks/pixi_test5/images/test2.png',
-  '../../mocks/pixi_test5/images/test3.png',
+  '../../mocks/pixi_test7/images/test1.png',
+  '../../mocks/pixi_test7/images/test2.png',
+  '../../mocks/pixi_test7/images/test3.png',
 ];
+let is_texture = false;
+let img_list = []; // PIXI.Textureクラスを入れる配列
 
 // pixiを使ったサンプル作成
 export const sketch = () => {
   let app = []; // pixiアプリケーションを格納する変数
   let img; // 画像を格納する変数
   let is_img = false;
-  const img_list = []; // PIXI.Textureクラスを入れる配列
 
   const disp_path = 'https://pixijs.com/assets/perlin.jpg';
 
@@ -49,7 +50,7 @@ export const sketch = () => {
     // 画像を読み込む
     const imgLoad = () => {
       // https://pixijs.com/playground?source=undefined&exampleId=textures.textureRotate
-      const path = '../../mocks/pixi_test3/images/test1.png';
+      const path = '../../mocks/pixi_test7/images/test1.png';
       PIXI.Assets.load(path).then((texture) => {
         const bg1 = new PIXI.Texture(texture.baseTexture);
         img = new PIXI.Sprite(bg1);
@@ -81,19 +82,13 @@ export const sketch = () => {
 
     // シェーダーに使う画像を読み込む
     const textureLoad = () => {
-      let is_texture = false;
       let disp;
       PIXI.Assets.load(disp_path).then((texture) => {
         disp = new PIXI.Texture(texture.baseTexture);
       });
 
-      // for (let i = 0; i < img_path.length; i++) {
-      //   const t = PIXI.Texture.from(img_path[i]);
-      //   img_list.push(t);
-      // }
-      // onAssetsLoaded(app, disp, img_list, frame);
-
       for (let i = 0; i < img_path.length; i++) {
+        // 読み込みタイミングで配列の中身の順番が変わる...
         PIXI.Assets.load(img_path[i]).then((texture) => {
           const img = new PIXI.Texture(texture.baseTexture);
           img_list.push(img);
@@ -141,26 +136,42 @@ const motion = (frame) => {
     count: 1,
     duration: 3,
     ease: 'quad.inOut',
-    onRepeat: () => {
-      console.log('onComplete!!');
+    delay: 1,
+    onComplete: () => {
+      // アニメーション終了時
+      console.log('onComplete!');
+      if (is_texture) {
+        // 画像を切り替える
+        // TODO うまく回せない
+        const c = img_list.concat(); //.push(img_list[0]);
+        c[2] = img_list[0];
+        img_list = c.concat();
+        console.log(img_list);
+      }
     },
   });
 };
 
 const onAssetsLoaded = (app, disp, img, frame) => {
+  const filter = new PIXI.Filter(null, sample_frag, {
+    u_time: 0,
+    u_tex: img[1],
+    u_resolution: [app.screen.width, app.screen.height],
+  });
+
   // 画像を動かす用のfilter
   const filter2 = new PIXI.Filter(null, fragment2, {
     dispFactor: 0.0,
-    dpr: 1.0,
     disp: disp,
-    texture1: PIXI.Texture.from(img_path[0]),
-    texture2: PIXI.Texture.from(img_path[1]),
+    texture1: img[0],
+    texture2: img[1],
     angle1: 0.0,
     angle2: 0.0,
     intensity1: 1.0,
-    intensity2: 1.0,
-    res: [app.screen.width, app.screen.height, 1.0, 1.0],
+    intensity2: 0.0,
+    res: [app.screen.width, app.screen.height, 1.0, -1.0],
   });
+  // res.wを-1にしないと上下反転する...
 
   app.stage.filterArea = app.renderer.screen;
   app.stage.filters = [filter2]; // 重ねたい順番に記述
@@ -171,12 +182,25 @@ const onAssetsLoaded = (app, disp, img, frame) => {
   });
 };
 
+// test用のフラグメントシェーダー
+const sample_frag = `
+varying vec2 vTextureCoord;
+uniform sampler2D u_tex;
+uniform float u_time;
+uniform vec2 u_resolution;
+float PI = 3.14159265358979;
+void main() {
+  vec2 uv = vTextureCoord;
+  vec4 tex = texture2D(u_tex, uv);
+  gl_FragColor = tex;
+}
+`;
+
 // 画像を動かす用のフラグメントシェーダー
 const fragment2 = `
   varying vec2 vTextureCoord;
 
-  uniform float dispFactor; // bool = trueなら動く
-  uniform float dpr;
+  uniform float dispFactor; // bool = trueなら動く time
   uniform sampler2D disp;
   uniform sampler2D texture1;
   uniform sampler2D texture2;
@@ -197,9 +221,9 @@ mat2 getRotM(float angle) {
 void main() {
   vec2 vUv = vTextureCoord;
   vec4 disp = texture2D(disp, vUv);
-  vec2 dispVec = vec2(disp.r, disp.g);
+  vec2 dispVec = vec2(disp.r, disp.b);
 
-  vec2 uv = gl_FragCoord.xy / (res.xy) ;
+  vec2 uv = gl_FragCoord.xy / res.xy ;
   vec2 myUV = (uv - vec2(0.5))*res.zw + vec2(0.5);
 
   vec2 distortedPosition1 = myUV + getRotM(angle1) * dispVec * intensity1 * dispFactor;
