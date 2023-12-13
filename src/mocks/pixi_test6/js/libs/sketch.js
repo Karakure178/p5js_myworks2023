@@ -3,11 +3,20 @@ import * as PIXI from 'pixi.js';
 import { ratioCalculation } from './utils/ratioCalculation';
 import { map } from './utils/map';
 
+let img_path = [
+  '../../mocks/pixi_test5/images/test1.png',
+  '../../mocks/pixi_test5/images/test2.png',
+  '../../mocks/pixi_test5/images/test3.png',
+];
+
 // pixiを使ったサンプル作成
 export const sketch = () => {
   let app = []; // pixiアプリケーションを格納する変数
   let img; // 画像を格納する変数
   let is_img = false;
+  const img_list = []; // PIXI.Textureクラスを入れる配列
+
+  const disp_path = 'https://pixijs.com/assets/perlin.jpg';
 
   const canvas = document.getElementById('canvas'); // canvas要素を取得
   const frame = { count: 0 }; // モーション用のカウンター
@@ -70,10 +79,44 @@ export const sketch = () => {
       }
     };
 
+    // シェーダーに使う画像を読み込む
+    const textureLoad = () => {
+      let is_texture = false;
+      let disp;
+      PIXI.Assets.load(disp_path).then((texture) => {
+        disp = new PIXI.Texture(texture.baseTexture);
+      });
+
+      // for (let i = 0; i < img_path.length; i++) {
+      //   const t = PIXI.Texture.from(img_path[i]);
+      //   img_list.push(t);
+      // }
+      // onAssetsLoaded(app, disp, img_list, frame);
+
+      for (let i = 0; i < img_path.length; i++) {
+        PIXI.Assets.load(img_path[i]).then((texture) => {
+          const img = new PIXI.Texture(texture.baseTexture);
+          img_list.push(img);
+          if (i === img_path.length - 1) {
+            is_texture = true;
+          }
+        });
+      }
+
+      if (!is_texture) {
+        const timeid = setInterval(() => {
+          if (is_texture) {
+            clearInterval(timeid);
+            onAssetsLoaded(app, disp, img_list, frame);
+          }
+        }, 100);
+      }
+    };
+
     init(); // pixiアプリケーションを初期化
     motion(frame); // モーションを作成
     imgLoad(); // 画像を読み込む
-
+    textureLoad(); // シェーダーに使う画像を読み込む
     //
   };
 
@@ -94,35 +137,28 @@ export const sketch = () => {
 
 // gsapを使ったモーション作成
 const motion = (frame) => {
-  gsap
-    .timeline({ repeat: -1 })
-    .to(frame, {
-      count: 1,
-      duration: 5,
-      ease: 'quad.inOut',
-      onRepeat: () => {
-        console.log('onComplete!!');
-      },
-    })
-    .to(frame, {
-      count: 0,
-      duration: 5,
-      ease: 'quad.inOut',
-    });
+  gsap.timeline({ repeat: -1 }).to(frame, {
+    count: 1,
+    duration: 3,
+    ease: 'quad.inOut',
+    onRepeat: () => {
+      console.log('onComplete!!');
+    },
+  });
 };
 
-const onAssetsLoaded = (app) => {
+const onAssetsLoaded = (app, disp, img, frame) => {
   // 画像を動かす用のfilter
   const filter2 = new PIXI.Filter(null, fragment2, {
     dispFactor: 0.0,
-    dpr: 0.1,
-    disp: PIXI.Texture.from('https://pixijs.com/assets/perlin.jpg'),
-    texture1: PIXI.Texture.from('../../mocks/pixi_test5/images/test1.png'),
-    texture2: PIXI.Texture.from('../../mocks/pixi_test5/images/test2.png'),
+    dpr: 1.0,
+    disp: disp,
+    texture1: PIXI.Texture.from(img_path[0]),
+    texture2: PIXI.Texture.from(img_path[1]),
     angle1: 0.0,
     angle2: 0.0,
-    intensity1: 0.3,
-    intensity2: 0.3,
+    intensity1: 1.0,
+    intensity2: 1.0,
     res: [app.screen.width, app.screen.height, 1.0, 1.0],
   });
 
@@ -134,24 +170,6 @@ const onAssetsLoaded = (app) => {
     filter2.uniforms.dispFactor = time;
   });
 };
-
-// test用のフラグメントシェーダー
-const sample_frag = `
-varying vec2 vTextureCoord;
-
-uniform sampler2D u_tex;
-uniform float u_time;
-uniform vec2 u_resolution;
-
-float PI = 3.14159265358979;
-
-void main() {
-  vec2 uv = vTextureCoord;
-  vec4 tex = texture2D(u_tex, uv);
-
-  gl_FragColor = tex;
-}
-`;
 
 // 画像を動かす用のフラグメントシェーダー
 const fragment2 = `
@@ -181,7 +199,7 @@ void main() {
   vec4 disp = texture2D(disp, vUv);
   vec2 dispVec = vec2(disp.r, disp.g);
 
-  vec2 uv = 0.5 * gl_FragCoord.xy / (res.xy) ;
+  vec2 uv = gl_FragCoord.xy / (res.xy) ;
   vec2 myUV = (uv - vec2(0.5))*res.zw + vec2(0.5);
 
   vec2 distortedPosition1 = myUV + getRotM(angle1) * dispVec * intensity1 * dispFactor;
