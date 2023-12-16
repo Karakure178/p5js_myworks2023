@@ -10,6 +10,8 @@ let img_path = [
 ];
 let is_texture = false;
 let img_list = []; // PIXI.Textureクラスを入れる配列
+let filter2;
+let img_count = 1;
 
 // pixiを使ったサンプル作成
 export const sketch = () => {
@@ -141,12 +143,17 @@ const motion = (frame) => {
       // アニメーション終了時
       console.log('onComplete!');
       if (is_texture) {
+        console.log('画像を切り替えます', img_count);
         // 画像を切り替える
-        // TODO うまく回せない
-        const c = img_list.concat(); //.push(img_list[0]);
-        c[2] = img_list[0];
-        img_list = c.concat();
-        console.log(img_list);
+        if (img_count > img_list.length - 1) {
+          img_count = 0;
+          filter2.uniforms.texture1 = img_list[img_list.length - 1];
+          filter2.uniforms.texture2 = img_list[0];
+        } else {
+          filter2.uniforms.texture1 = img_list[img_count];
+          filter2.uniforms.texture2 = img_list[img_count + 1];
+        }
+        img_count++;
       }
     },
   });
@@ -160,7 +167,7 @@ const onAssetsLoaded = (app, disp, img, frame) => {
   });
 
   // 画像を動かす用のfilter
-  const filter2 = new PIXI.Filter(null, fragment2, {
+  filter2 = new PIXI.Filter(null, fragment2, {
     dispFactor: 0.0,
     disp: disp,
     texture1: img[0],
