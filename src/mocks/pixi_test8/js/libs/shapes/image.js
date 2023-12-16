@@ -1,8 +1,8 @@
 import Shape from './core/shape';
 
 class Image extends Shape {
-  constructor(app, path, is_tex = false) {
-    super(app, path);
+  constructor(app, container, path, is_tex = false) {
+    super(app, container, path); // TODO 順不同に直す
     this.is_load = false; // 画像がロードされているかどうか
     this.is_tex = is_tex; // テクスチャーとして使うかSpriteとして使うか(spriteの場合は_setが走る)
 

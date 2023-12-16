@@ -29,7 +29,7 @@ class Shader {
    * シェーダーをセットする関数、キャンバス全体に適用する
    */
   setShader() {
-    this.filter = new PIXI.Filter(this.vertex, fragment2, this.uniforms);
+    this.filter = new PIXI.Filter(this.vertex, this.fragment, this.uniforms);
     this.app.stage.filterArea = this.app.renderer.screen;
     this.app.stage.filters = [this.filter];
   }
