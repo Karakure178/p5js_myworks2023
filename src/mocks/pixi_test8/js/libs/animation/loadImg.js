@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { OldImage } from '../shapes/image';
-import { img_path } from '../../parameters';
+import { img_path, disp_path } from '../../parameters';
 import { Distortion } from '../filters/distortion';
 
 /**
@@ -12,8 +12,7 @@ import { Distortion } from '../filters/distortion';
 export class LoadImg {
   constructor(app) {
     this.app = app;
-    this.container = new PIXI.Container();
-    this.disp = new OldImage({ app: app, container: this.container, path: img_path[0], is_tex: true });
+    this.disp = new OldImage({ app: app, path: disp_path, is_tex: true });
     // this.display = new Image({ app: app, container: this.container, path: img_path[0], is_tex: false });
 
     this.img_path = img_path;
@@ -36,7 +35,9 @@ export class LoadImg {
     }
 
     const timerId = setInterval(() => {
-      if (this.img_list.length === this.img_path.length) {
+      if (this.img_list.length === this.img_path.length && this.disp.is_load) {
+        console.log(this.disp.img);
+
         clearInterval(timerId);
         this._setShader();
       }
@@ -62,7 +63,6 @@ export class LoadImg {
    * シェーダーのアニメーションを行う関数,uniformsの値を変更する
    */
   ticker() {
-    console.log('LoadImg ticker', this.filter);
     if (this.is_filter) this.filter.ticker();
   }
 }

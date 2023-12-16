@@ -92,11 +92,11 @@ export class Image extends Shape {
  * 読み込み処理を自力で書いたパターンのOldImage クラス
  */
 export class OldImage extends Shape {
-  constructor(app, path, is_tex = false) {
-    super(app, path);
+  constructor({app, path, is_tex = false}) {
+    super({app:app, path:path});
     this.is_load = false; // 画像がロードされているかどうか
     this.is_tex = is_tex; // テクスチャーとして使うかSpriteとして使うか
-
+    this.img;// 画像(Texture)を返す
     this._init();
   }
 
@@ -109,7 +109,7 @@ export class OldImage extends Shape {
    */
   _init() {
     this._load();
-    if (this.is_tex) this._set();
+    if (this.is_tex === false) this._set();
   }
 
   /**
@@ -142,13 +142,14 @@ export class OldImage extends Shape {
    */
   _load() {
     // 画像を読み込む 遅延処理
-    // TODO  読み込みタイミングによって順番が変わってしまうので要修正
     PIXI.Assets.load(this.path).then((texture) => {
       if (this.is_tex) {
+        console.log("読み込まれた",this.path)
         this.img = new PIXI.Texture(texture.baseTexture);
       } else {
+        console.log("読み込まれた2")
         const tex = new PIXI.Texture(texture.baseTexture);
-        this.img = new PIXI.Sprite(tex);
+        this.shape = new PIXI.Sprite(tex);
       }
       this.is_load = true;
     });

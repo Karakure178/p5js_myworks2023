@@ -9,3 +9,5 @@ export const img_path = [
   '../../mocks/pixi_test8/images/test5.png',
   '../../mocks/pixi_test8/images/test6.png',
 ];
+
+export const disp_path = '../../mocks/pixi_test8/images/grid.png';
