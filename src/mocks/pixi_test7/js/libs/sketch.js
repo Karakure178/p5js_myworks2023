@@ -7,6 +7,9 @@ let img_path = [
   '../../mocks/pixi_test7/images/test1.png',
   '../../mocks/pixi_test7/images/test2.png',
   '../../mocks/pixi_test7/images/test3.png',
+  '../../mocks/pixi_test7/images/test4.png',
+  '../../mocks/pixi_test7/images/test5.png',
+  '../../mocks/pixi_test7/images/test6.png',
 ];
 let is_texture = false;
 let img_list = []; // PIXI.Textureクラスを入れる配列
@@ -40,6 +43,8 @@ export const sketch = () => {
   // 画面サイズに合わせてcanvasのサイズを変更
   init_app.width = window.innerWidth;
   init_app.height = ratioCalculation(init_app.width, imgReso.height, imgReso.width);
+
+  window.addEventListener('resize', () => {});
 
   // setup関数とdraw関数を定義
   const setup = () => {
@@ -105,16 +110,15 @@ export const sketch = () => {
           if (is_texture) {
             clearInterval(timeid);
             onAssetsLoaded(app, disp, img_list, frame);
+            motion(frame); // モーションを作成
           }
         }, 100);
       }
     };
 
     init(); // pixiアプリケーションを初期化
-    motion(frame); // モーションを作成
     imgLoad(); // 画像を読み込む
     textureLoad(); // シェーダーに使う画像を読み込む
-    //
   };
 
   // ここに描画処理を記述
@@ -141,18 +145,15 @@ const motion = (frame) => {
     delay: 1,
     onComplete: () => {
       // アニメーション終了時
-      console.log('onComplete!');
-      if (is_texture) {
-        console.log('画像を切り替えます', img_count);
-        // 画像を切り替える
-        if (img_count > img_list.length - 1) {
-          img_count = 0;
-          filter2.uniforms.texture1 = img_list[img_list.length - 1];
-          filter2.uniforms.texture2 = img_list[0];
-        } else {
-          filter2.uniforms.texture1 = img_list[img_count];
-          filter2.uniforms.texture2 = img_list[img_count + 1];
-        }
+      // 画像を切り替える
+      console.log('画像を切り替えます', img_count);
+      if (img_count > img_list.length - 2) {
+        img_count = 0;
+        filter2.uniforms.texture1 = img_list[img_list.length - 1];
+        filter2.uniforms.texture2 = img_list[0];
+      } else {
+        filter2.uniforms.texture1 = img_list[img_count];
+        filter2.uniforms.texture2 = img_list[img_count + 1];
         img_count++;
       }
     },
