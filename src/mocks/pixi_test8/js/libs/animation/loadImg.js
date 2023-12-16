@@ -1,3 +1,4 @@
+import {}
 class LoadImg {
   constructor() {
     this.img = new Image();
