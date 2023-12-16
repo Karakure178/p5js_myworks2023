@@ -4,9 +4,8 @@ import * as PIXI from 'pixi.js';
  * @class Shader
  * @description
  * シェーダー用クラス<br>
- * 全体適用用
  */
-class Shader {
+export class Shader {
   /**
    * @constructor
    * @param {PIXI.Application} app - アプリケーション
@@ -14,24 +13,32 @@ class Shader {
    * @param {String} vertex - 頂点シェーダー
    * @param {String} fragment - フラグメントシェーダー
    */
-  constructor(app, uniforms, vertex, fragment) {
+  constructor({ app, uniforms, vertex, fragment, container = null }) {
     this.app = app;
     this.uniforms = uniforms;
     this.vertex = vertex;
     this.fragment = fragment;
     this.filter;
+    this.container = container;
+    this.setShader();
   }
 
   /**
    * @memberof Shader
    * @method setShader
    * @description
-   * シェーダーをセットする関数、キャンバス全体に適用する
+   * シェーダーをセットする関数、キャンバス全体に適用する<br>
+   * コンテナがある場合はコンテナだけに適用させる
    */
   setShader() {
     this.filter = new PIXI.Filter(this.vertex, this.fragment, this.uniforms);
-    this.app.stage.filterArea = this.app.renderer.screen;
-    this.app.stage.filters = [this.filter];
+    if (this.container === null) {
+      this.container.filterArea = this.container.renderer.screen;
+      this.container.filters = [this.filter];
+    } else {
+      this.container.filterArea = this.app.renderer.screen;
+      this.app.stage.filters = [this.filter];
+    }
   }
 
   /**

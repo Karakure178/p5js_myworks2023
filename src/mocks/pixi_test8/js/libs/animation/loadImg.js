@@ -1,24 +1,65 @@
 import * as PIXI from 'pixi.js';
 import { Image } from '../shapes/image';
 import { img_path } from '../../parameters';
+import { Distortion } from '../filters/distortion';
+
 /**
  * @class LoadImg
  * @description
  * 画像読み込みこんでアニメーションさせるためのクラス
+ *
  */
-class LoadImg {
+export class LoadImg {
   constructor(app) {
     this.app = app;
     this.container = new PIXI.Container();
-    this.display = new Image(app, this.contaier, img_path[0], true);
+    this.disp = new Image({ app: app, container: this.container, path: img_path[0], is_tex: true });
+    // this.display = new Image({ app: app, container: this.container, path: img_path[0], is_tex: false });
 
     this.img_path = img_path;
     this.img_list = []; // 画像のテクスチャを入れるリスト
+    this.filter; //
+    this._init();
   }
 
+  /**
+   * @method _init
+   * @memberof LoadImg
+   * @protected
+   * @description
+   * 初期化
+   */
   _init() {
     for (let i = 0; i < this.img_path.length; i++) {
-      this.img_list.push(new Image(app, this.img_path[i], false));
+      this.img_list.push(new Image({ app: this.app, path: this.img_path[i], is_tex: true }));
     }
+
+    const timerId = setInterval(() => {
+      if (this.img_list.length === this.img_path.length) {
+        clearInterval(timerId);
+        this._setShader();
+      }
+    }, 100);
+  }
+
+  /**
+   * @method setShader
+   * @memberof LoadImg
+   * @protected
+   * @description
+   * シェーダーをセットする関数、キャンバス全体に適用する<br>
+   */
+  _setShader() {
+    this.filter = new Distortion({ app: this.app, disp: this.disp, img_list: this.img_list });
+  }
+
+  /**
+   * @method ticker
+   * @memberof LoadImg
+   * @description
+   * シェーダーのアニメーションを行う関数,uniformsの値を変更する
+   */
+  ticker() {
+    //this.filter.ticker();
   }
 }

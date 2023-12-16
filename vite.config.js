@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import glsl from 'vite-plugin-glsl'; //これのためにpackage.jsonにtype:moduleを追加した
 import { resolve } from 'path';
 import liveReload from 'vite-plugin-live-reload'; //Dev時のファイルリロード監視に任意のファイルを追加できるようにするため
 
@@ -57,7 +58,9 @@ export default defineConfig({
       input: inputFiles,
     },
   },
-  plugins: [liveReload('**/*.html')],
+  // glslファイルをimportできるようにする 参考↓
+  // https://www.npmjs.com/package/vite-plugin-glsl
+  plugins: [liveReload('**/*.html'), glsl()],
 });
 
 //参考にした記事：https://zenn.dev/hiiiita/articles/a4881dab7226aa

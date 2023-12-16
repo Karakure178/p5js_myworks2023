@@ -1,8 +1,10 @@
-import Shape from './core/shape';
+import { Shape } from '../core/shape';
 
-class Image extends Shape {
-  constructor(app, container, path, is_tex = false) {
-    super(app, container, path); // TODO 順不同に直す
+export class Image extends Shape {
+  // オブジェクトにすると順不同にできる
+  // https://zenn.dev/rabee/articles/javascript-destructuring-assignment-default-params
+  constructor({ app, container, path, is_tex = false }) {
+    super({ app: app, container: container, path: path });
     this.is_load = false; // 画像がロードされているかどうか
     this.is_tex = is_tex; // テクスチャーとして使うかSpriteとして使うか(spriteの場合は_setが走る)
 
@@ -19,6 +21,7 @@ class Image extends Shape {
   _init() {
     // 画像を読み込む 遅延処理としてloaderを使う
     // https://zenn.dev/tonbi/articles/a120c86ca99316
+    console.log('this.path', this.app);
     this.app.loader.add(this.path).load(this._load);
   }
 

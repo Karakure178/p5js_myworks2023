@@ -2,9 +2,9 @@ import * as PIXI from 'pixi.js';
 /**
  * @class Shape
  * @description
- * 形状用クラス<br>
+ * 形状用基底クラス<br>
  */
-class Shape {
+export class Shape {
   /**
    * @constructor
    * @param {PIXI.Application} app - アプリケーション
@@ -13,7 +13,7 @@ class Shape {
    * @param {String} color - 色
    * @param {String} path - パス
    */
-  constructor(app, container = null, vertexes = null, color = null, path = null) {
+  constructor({ app, container = null, vertexes = null, color = null, path = null }) {
     this.app = app;
     this.width;
     this.height;

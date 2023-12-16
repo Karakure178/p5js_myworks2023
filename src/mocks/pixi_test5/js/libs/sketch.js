@@ -39,7 +39,6 @@ export const sketch = () => {
     globalThis.__PIXI_APP__ = app;
 
     motion(frame); // モーションを作成
-    console.log(app.screen.width, app.screen.height);
 
     // https://pixijs.com/playground?source=undefined&exampleId=textures.textureRotate
     const path = '../../mocks/pixi_test3/images/test1.png';
