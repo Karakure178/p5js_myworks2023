@@ -35,9 +35,9 @@ export class LoadImg {
     }
 
     const timerId = setInterval(() => {
-      if (this.img_list.length === this.img_path.length && this.disp.is_load) {
-        console.log(this.disp.img);
-
+      // 全て読み込まれたか確認してからシェーダーをセットする
+      const is_totalLoad = this.img_list.every((img) => img.is_load);
+      if (is_totalLoad && this.disp.is_load) {
         clearInterval(timerId);
         this._setShader();
       }

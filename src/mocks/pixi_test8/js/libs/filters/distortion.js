@@ -19,11 +19,9 @@ export class Distortion extends Shader {
   constructor({ app, disp, img_list }) {
     const uniforms = {
       dispFactor: 0.0,
-      u_time: { type: '1f', value: 0.0 },
-      u_resolution: { type: 'v2', value: [app.renderer.width, app.renderer.height] },
-      u_disp: { type: 'sampler2D', value: disp.img },
-      u_texture: { type: 'sampler2D', value: img_list[0].img },
-      u_texture2: { type: 'sampler2D', value: img_list[1].img },
+      disp: disp.img,
+      texture1: img_list[0].img,
+      texture2: img_list[1].img,
       angle1: 0.0,
       angle2: 0.0,
       intensity1: 1.0,
@@ -32,7 +30,7 @@ export class Distortion extends Shader {
     };
 
     super({ app: app, uniforms: uniforms, vertex: vertex, fragment: fragment });
-    this.disp = disp; // 差分画像用
+    this.disp = disp.img; // 差分画像用
     this.img_list = img_list;
     this.img_count = 1;
     this.frame = { count: 0 };
