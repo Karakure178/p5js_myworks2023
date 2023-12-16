@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { ratioCalculation } from './utils/ratioCalculation';
 import { LoadImg } from './animation/loadImg';
+import { imgReso } from '../parameters';
 
 /**pixiを使ったサンプル作成
  * @class Sketch
@@ -25,9 +26,9 @@ export class Sketch {
    */
   _init() {
     this.app = new PIXI.Application(this._init_app()); // pixiアプリケーションを作成
+    globalThis.__PIXI_APP__ = this.app;
     const canvas = document.getElementById('canvas'); // canvas要素を取得
     canvas.appendChild(this.app.view); // canvas要素をDOMに追加
-    globalThis.__PIXI_APP__ = this.app;
     this.setAnimation();
 
     // テストコード
@@ -35,6 +36,7 @@ export class Sketch {
     PIXI.Assets.load(path).then((texture) => {
       const bg1 = new PIXI.Texture(texture.baseTexture);
       const img = new PIXI.Sprite(bg1);
+      console.log(bg1.width);
       this.app.stage.addChild(img);
     });
   }
@@ -58,8 +60,10 @@ export class Sketch {
     // pc用
     const width = window.innerWidth;
     const normal_width = width;
-    const normal_height = ratioCalculation(width, 1920, 1080);
+    const normal_height = ratioCalculation(width, 1080, 1920);
     const ratio = normal_width / normal_height; // 画面の縦横比(予備)
+
+    console.log('halllo', normal_height);
     this.app.renderer.resize(normal_width, normal_height);
   }
 
@@ -74,13 +78,13 @@ export class Sketch {
   _init_app() {
     const setting = {
       width: window.innerWidth,
-      height: ratioCalculation(window.innerWidth, 1920, 1080),
+      height: ratioCalculation(window.innerWidth, 1080, 1920),
       backgroundColor: 0x061639,
       antialias: true,
       resolution: 1,
-      resizeTo: window,
     };
     return setting;
+    //resizeTo: window, // これがあると全画面になる...
   }
 
   /**

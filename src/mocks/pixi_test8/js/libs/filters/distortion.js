@@ -1,6 +1,9 @@
 import { Shader } from '../core/shader';
 import vertex from '../shaders/normal.vert';
 import fragment from '../shaders/distortion.frag';
+import { ratioCalculation } from '../utils/ratioCalculation';
+import { imgReso } from '../../parameters';
+
 import gsap from 'gsap';
 
 /**
@@ -26,7 +29,7 @@ export class Distortion extends Shader {
       angle2: 0.0,
       intensity1: 1.0,
       intensity2: 0.0,
-      res: [app.screen.width, app.screen.height, 1.0, -1.0],
+      res: [imgReso.width, imgReso.height, 1.0, -1.0],
     };
 
     super({ app: app, uniforms: uniforms, vertex: vertex, fragment: fragment });
@@ -48,26 +51,38 @@ export class Distortion extends Shader {
   ticker() {
     const time = this.frame.count;
     this.filter.uniforms.dispFactor = time;
+
+    // TODO resizeに書き直す
+    //const width = this.app.screen.width;
+    //this.filter.uniforms.res[0] = width;
+    //console.log(width, 'width');
+    //console.log(this.img_list[0].img.height, 'dh');
+    //const height = ratioCalculation(width, this.img_list[0].img.height, this.img_list[0].img.width);
+    //console.log(height, 'height');
   }
 
   // gsapを使ったモーション作成
+  // .bindしないとthisが変わってしまう
   _motion() {
     gsap.timeline({ repeat: -1 }).to(this.frame, {
       count: 1,
       duration: 3,
       ease: 'quad.inOut',
       delay: 1,
-      onComplete: () => {
-        if (this.img_count > this.img_list.length - 2) {
-          this.img_count = 0;
-          this.filter.uniforms.u_texture1 = this.img_list[this.img_list.length - 1];
-          this.filter.uniforms.u_texture2 = this.img_list[0];
-        } else {
-          this.filter.uniforms.u_texture1 = this.img_list[this.img_count];
-          this.filter.uniforms.u_texture2 = this.img_list[this.img_count + 1];
-          this.img_count++;
-        }
-      },
+      onComplete: this._setUniforms.bind(this),
     });
+  }
+
+  _setUniforms() {
+    console.log('画像を切り替えます', this.img_count);
+    if (this.img_count > this.img_list.length - 2) {
+      this.img_count = 0;
+      this.filter.uniforms.texture1 = this.img_list[this.img_list.length - 1].img;
+      this.filter.uniforms.texture2 = this.img_list[0].img;
+    } else {
+      this.filter.uniforms.texture1 = this.img_list[this.img_count].img;
+      this.filter.uniforms.texture2 = this.img_list[this.img_count + 1].img;
+      this.img_count++;
+    }
   }
 }

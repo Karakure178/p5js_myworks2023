@@ -11,3 +11,8 @@ export const img_path = [
 ];
 
 export const disp_path = '../../mocks/pixi_test8/images/grid.png';
+
+export const imgReso = {
+  width: 1216,
+  height: 832,
+}; // 画像の解像度
