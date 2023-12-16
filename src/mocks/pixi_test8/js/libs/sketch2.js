@@ -29,17 +29,24 @@ export class Sketch {
     this.img_list;
     this.is_loadImg;
 
-    this.init();
+    this._init();
+    this.resize();
+    this._addEvent();
+    this.ticker();
   }
 
   /**
-   * @method init
+   * @method _init
+   * @memberof Sketch
+   * @protected
    * @description
    * 初期化
    */
-  init() {
-    this.resize();
-    this.ticker();
+  _init() {
+    this.app = new PIXI.Application(this._init_app()); // pixiアプリケーションを作成
+    const canvas = document.getElementById('canvas'); // canvas要素を取得
+    canvas.appendChild(this.app.view); // canvas要素をDOMに追加
+    globalThis.__PIXI_APP__ = this.app;
   }
 
   /**
@@ -53,6 +60,40 @@ export class Sketch {
     const normal_width = width;
     const normal_height = ratioCalculation(width, 1920, 1080);
     const ratio = normal_width / normal_height; // 画面の縦横比(予備)
+    this.app.renderer.resize(normal_width, normal_height);
+  }
+
+  /**
+   * @method _init_app
+   * @memberof Sketch
+   * @protected
+   * @return setting
+   * @description
+   * pixiアプリケーションの設定を初期化する関数
+   */
+  _init_app() {
+    const setting = {
+      width: window.innerWidth,
+      height: ratioCalculation(window.innerWidth, 1920, 1080),
+      backgroundColor: 0x061639,
+      antialias: true,
+      resolution: 1,
+      resizeTo: window,
+    };
+    return setting;
+  }
+
+  /**
+   * @method _addEvent
+   * @memberof Sketch
+   * @protected
+   * @description
+   * イベントを追加する関数
+   */
+  _addEvent() {
+    window.addEventListener('resize', () => {
+      this.resize();
+    });
   }
 
   /**
@@ -67,7 +108,7 @@ export class Sketch {
   }
 }
 
-export const sketch = () => {
+const sketch = () => {
   let app = []; // pixiアプリケーションを格納する変数
   let img; // 画像を格納する変数
   let is_img = false;
@@ -86,9 +127,10 @@ export const sketch = () => {
     height: imgReso.height,
     backgroundColor: 0x061639,
     antialias: true,
-    resolution: 1,
     resizeTo: window,
-  }; //  resolution: window.devicePixelRatio || 1,
+    autoDensity: true,
+    resolution: window.devicePixelRatio || 1,
+  };
 
   // 画面サイズに合わせてcanvasのサイズを変更
   init_app.width = window.innerWidth;

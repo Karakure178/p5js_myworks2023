@@ -1,8 +1,8 @@
-import { sketch } from './libs/sketch';
+import { Sketch } from './libs/sketch2';
 
 /* ===========================================
  * 全体処理用
  * ======================================== */
 window.addEventListener('DOMContentLoaded', () => {
-  sketch();
+  new Sketch();
 });

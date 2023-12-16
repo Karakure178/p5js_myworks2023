@@ -23,13 +23,7 @@ class Shape {
     this.path = path;
     this.shape;
     this._init();
-
-    // コンテナに入れない場合は、app.stageに入れる
-    if (this.container !== null) {
-      this.container.addChild(this.shape);
-    } else {
-      this.app.stage.addChild(this.shape);
-    }
+    this._set();
   }
 
   /**
@@ -41,6 +35,26 @@ class Shape {
    */
   _init() {
     //
+  }
+
+  /**
+   * @memberof Shape
+   * @method _set
+   * @protected
+   * @description
+   * 形状をapp or containerにセットする関数
+   */
+  _set() {
+    // pathを読み込まない場合はそのまま設定する
+    // pathがある場合は遅延処理があるのでオーバーライドしてもらう
+    // コンテナに入れない場合は、app.stageに入れる
+    if (this.path === null) {
+      if (this.container !== null) {
+        this.container.addChild(this.shape);
+      } else {
+        this.app.stage.addChild(this.shape);
+      }
+    }
   }
 
   /**
