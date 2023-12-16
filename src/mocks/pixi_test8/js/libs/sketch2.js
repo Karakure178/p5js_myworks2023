@@ -16,7 +16,57 @@ let img_list = []; // PIXI.Textureクラスを入れる配列
 let filter2;
 let img_count = 1;
 
-// pixiを使ったサンプル作成
+/**pixiを使ったサンプル作成
+ * @class Sketch
+ */
+export class Sketch {
+  constructor() {
+    this.app;
+    this.filter;
+
+    this.is_img;
+    this.img_path;
+    this.img_list;
+    this.is_loadImg;
+
+    this.init();
+  }
+
+  /**
+   * @method init
+   * @description
+   * 初期化
+   */
+  init() {
+    this.resize();
+    this.ticker();
+  }
+
+  /**
+   * @method resize
+   * @description
+   * 全体のリサイズ処理
+   */
+  resize() {
+    // pc用
+    const width = window.innerWidth;
+    const normal_width = width;
+    const normal_height = ratioCalculation(width, 1920, 1080);
+    const ratio = normal_width / normal_height; // 画面の縦横比(予備)
+  }
+
+  /**
+   * @method ticker
+   * @description
+   * pixiアプリケーションを繰り返し実行する関数
+   */
+  ticker() {
+    this.app.ticker.add(() => {
+      //
+    });
+  }
+}
+
 export const sketch = () => {
   let app = []; // pixiアプリケーションを格納する変数
   let img; // 画像を格納する変数
