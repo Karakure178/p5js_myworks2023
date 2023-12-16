@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { Image } from '../shapes/image';
+import { OldImage } from '../shapes/image';
 import { img_path } from '../../parameters';
 import { Distortion } from '../filters/distortion';
 
@@ -13,12 +13,13 @@ export class LoadImg {
   constructor(app) {
     this.app = app;
     this.container = new PIXI.Container();
-    this.disp = new Image({ app: app, container: this.container, path: img_path[0], is_tex: true });
+    this.disp = new OldImage({ app: app, container: this.container, path: img_path[0], is_tex: true });
     // this.display = new Image({ app: app, container: this.container, path: img_path[0], is_tex: false });
 
     this.img_path = img_path;
     this.img_list = []; // 画像のテクスチャを入れるリスト
     this.filter; //
+    this.is_filter = false; // フィルターを適用されたかどうか
     this._init();
   }
 
@@ -31,7 +32,7 @@ export class LoadImg {
    */
   _init() {
     for (let i = 0; i < this.img_path.length; i++) {
-      this.img_list.push(new Image({ app: this.app, path: this.img_path[i], is_tex: true }));
+      this.img_list.push(new OldImage({ app: this.app, path: this.img_path[i], is_tex: true }));
     }
 
     const timerId = setInterval(() => {
@@ -51,6 +52,7 @@ export class LoadImg {
    */
   _setShader() {
     this.filter = new Distortion({ app: this.app, disp: this.disp, img_list: this.img_list });
+    this.is_filter = true;
   }
 
   /**
@@ -60,6 +62,7 @@ export class LoadImg {
    * シェーダーのアニメーションを行う関数,uniformsの値を変更する
    */
   ticker() {
-    //this.filter.ticker();
+    console.log('LoadImg ticker', this.filter);
+    if (this.is_filter) this.filter.ticker();
   }
 }

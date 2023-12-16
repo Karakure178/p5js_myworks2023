@@ -1,5 +1,7 @@
 import { Shape } from '../core/shape';
+import * as PIXI from 'pixi.js';
 
+// 非同期処理のせいで動かない
 export class Image extends Shape {
   // オブジェクトにすると順不同にできる
   // https://zenn.dev/rabee/articles/javascript-destructuring-assignment-default-params
@@ -9,6 +11,7 @@ export class Image extends Shape {
     this.is_tex = is_tex; // テクスチャーとして使うかSpriteとして使うか(spriteの場合は_setが走る)
 
     this._init();
+    this._load();
   }
 
   /**
@@ -18,11 +21,11 @@ export class Image extends Shape {
    * @override
    * @description
    */
-  _init() {
-    // 画像を読み込む 遅延処理としてloaderを使う
+  async _init() {
+    // 画像を読み込む 遅延処理としてloaderを使う→破壊的変更によって使用不可に,変わりに@loader使ってる
     // https://zenn.dev/tonbi/articles/a120c86ca99316
-    console.log('this.path', this.app);
-    this.app.loader.add(this.path).load(this._load);
+    // https://zenn.dev/chiietc/articles/62dae80a6b0a54
+    this.texture = await PIXI.Assets.load(this.path);
   }
 
   /**
@@ -52,15 +55,20 @@ export class Image extends Shape {
    * 画像をロードする loader内で実行される
    */
   _load() {
-    // TODO  読み込みタイミングによって順番が変わってしまうので要修正
-    const tex = this.app.loader.resources[this.path].texture;
-    if (this.is_tex) {
-      this.shape = tex;
-    } else {
-      this.shape = new PIXI.Sprite(tex);
-    }
-    this.is_load = true;
-    this._set();
+    const timerId = setInterval(() => {
+      const tex = this.texture;
+      if (tex) {
+        console.log("読み込まれた")
+        clearInterval(timerId);
+        if (this.is_tex) {
+          this.shape = tex;
+        } else {
+          this.shape = new PIXI.Sprite(tex);
+        }
+        this.is_load = true;
+        this._set();
+      }
+    }, 100);
   }
 
   /**
@@ -83,12 +91,11 @@ export class Image extends Shape {
  * @description
  * 読み込み処理を自力で書いたパターンのOldImage クラス
  */
-class OldImage extends Shape {
-  constructor(app, path, is_tex = false, is_set = false) {
+export class OldImage extends Shape {
+  constructor(app, path, is_tex = false) {
     super(app, path);
     this.is_load = false; // 画像がロードされているかどうか
     this.is_tex = is_tex; // テクスチャーとして使うかSpriteとして使うか
-    this.is_set = is_set; // 画像をコンテナ or appにセットするかどうか
 
     this._init();
   }
@@ -102,7 +109,7 @@ class OldImage extends Shape {
    */
   _init() {
     this._load();
-    if (this.is_set) this._set();
+    if (this.is_tex) this._set();
   }
 
   /**

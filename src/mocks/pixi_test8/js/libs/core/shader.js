@@ -31,12 +31,12 @@ export class Shader {
    * コンテナがある場合はコンテナだけに適用させる
    */
   setShader() {
-    this.filter = new PIXI.Filter(this.vertex, this.fragment, this.uniforms);
-    if (this.container === null) {
+    this.filter = new PIXI.Filter(null, this.fragment, this.uniforms);
+    if (this.container !== null) {
       this.container.filterArea = this.container.renderer.screen;
       this.container.filters = [this.filter];
     } else {
-      this.container.filterArea = this.app.renderer.screen;
+      this.app.stage.filterArea = this.app.renderer.screen;
       this.app.stage.filters = [this.filter];
     }
   }

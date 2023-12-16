@@ -23,7 +23,6 @@ export class Shape {
     this.path = path;
     this.shape;
     this._init();
-    this._set();
   }
 
   /**

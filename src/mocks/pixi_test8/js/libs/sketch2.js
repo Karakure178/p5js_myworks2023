@@ -29,6 +29,14 @@ export class Sketch {
     canvas.appendChild(this.app.view); // canvas要素をDOMに追加
     globalThis.__PIXI_APP__ = this.app;
     this.setAnimation();
+
+    // テストコード
+    const path = '../../mocks/pixi_test7/images/test1.png';
+    PIXI.Assets.load(path).then((texture) => {
+      const bg1 = new PIXI.Texture(texture.baseTexture);
+      const img = new PIXI.Sprite(bg1);
+      this.app.stage.addChild(img);
+    });
   }
 
   /**

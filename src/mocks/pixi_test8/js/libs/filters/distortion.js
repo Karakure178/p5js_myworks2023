@@ -48,7 +48,8 @@ export class Distortion extends Shader {
    * @override
    */
   ticker() {
-    this.filter.uniforms.u_time = this.frame.count;
+    const time = this.frame.count;
+    this.filter.uniforms.dispFactor = time;
   }
 
   // gsapを使ったモーション作成
