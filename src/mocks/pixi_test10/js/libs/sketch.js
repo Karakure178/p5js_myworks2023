@@ -10,6 +10,16 @@ export class Sketch {
   constructor() {
     this.app;
     this.animation;
+    this.colors = [
+      [0x9ec8b9, 0x5c8374, 0x092635],
+      [0xf0ece5, 0xb6bbc4, 0x161a30],
+      [0xecf4d6, 0x9ad0c2, 0x2d9596],
+      [0xf05941, 0xbe3144, 0x872341],
+      [0xffc7c7, 0xed9ed6, 0xc683d7],
+      [0xf5f5f5, 0xf99417, 0x4d4c7d],
+      [0xf7e987, 0x5b9a8b, 0x445069],
+      [0x8cabff, 0x4477ce, 0x512b81],
+    ];
 
     this._init();
     this.resize();
@@ -57,7 +67,9 @@ export class Sketch {
 
       const points = e.data.getLocalPosition(e.currentTarget);
       console.log(points.x, points.y);
-      new Bear({ app: this.app, colors: [0x9ec8b9, 0x5c8374, 0x092635] }).draw(points.x, points.y);
+
+      const index = Math.round(Math.random() * (this.colors.length - 1));
+      new Bear({ app: this.app, colors: this.colors[index] }).draw(points.x, points.y);
     });
   }
 
