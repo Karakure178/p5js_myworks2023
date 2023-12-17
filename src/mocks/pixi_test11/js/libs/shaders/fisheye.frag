@@ -1,5 +1,5 @@
 varying vec2 vTextureCoord;
-uniform sampler2D uSampler;
+uniform sampler2D u_tex;
 
 float PI = 3.14159265358979;
 void main() {
@@ -21,6 +21,6 @@ void main() {
     uv.y = r * sin(phi) + 0.5;
   }
 
-  vec4 tex = texture2D(uSampler, uv);
-  gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+  vec4 tex = texture2D(u_tex, uv);
+  gl_FragColor = tex;
 }
