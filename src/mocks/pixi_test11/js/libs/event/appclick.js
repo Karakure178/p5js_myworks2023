@@ -41,13 +41,13 @@ export class AppClick {
       const points = e.data.getLocalPosition(e.currentTarget);
 
       const index = Math.round(Math.random() * (this.colors.length - 1));
-      new Bear({ app: this.app, colors: this.colors[index] }).draw(points.x, points.y);
+      new Bear({ app: this.app, colors: this.colors[index], container: this.container }).draw(points.x, points.y);
       console.log(points.x, points.y);
 
       this.filter = new Fisheye({
         app: this.app,
         container: this.container,
-        uniforms: {},
+        uniforms: { center: [points.x, points.y] },
       });
     });
   }

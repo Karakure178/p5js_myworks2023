@@ -14,12 +14,13 @@ export class Bear extends Shape {
    * @param {Number} radius - 半径
    * @param {Number} colors - 色
    */
-  constructor({ app: app, colors: colors }) {
-    super({ app: app });
+  constructor({ app: app, colors: colors, container: container }) {
+    super({ app: app, container: container });
     this.radius = Math.random() * 100 + 50;
     this.colors = colors;
     this.pg = new PIXI.Graphics();
-    this.app.stage.addChild(this.pg);
+    this.shape = this.pg;
+    this._set();
   }
 
   /**

@@ -15,9 +15,7 @@ export class Fisheye extends Shader {
    * @param {PIXI.Application} app - アプリケーション
    * @param {PIXI.Texture} tex - 画像
    */
-  constructor({ app, tex = null, container }) {
-    const uniforms = {};
-
+  constructor({ app, tex = null, container, uniforms = null }) {
     super({ app: app, container: container, uniforms: uniforms, vertex: vertex, fragment: fragment });
   }
 }
