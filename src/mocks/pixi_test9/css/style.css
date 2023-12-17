@@ -1,0 +1,26 @@
+html,
+body {
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  text-align: center;
+}
+
+
+.main{
+  background-color: black;
+  width: 100vw;
+}
+
+p{
+  color: white;
+  font-size: 20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+
+/* 以降キャンバス設定 */
+#canvas {
+  /* width: 100vw; */
+}

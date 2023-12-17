@@ -2,21 +2,22 @@ import * as PIXI from 'pixi.js';
 import { OldImage } from '../shapes/image';
 import { img_path, disp_path } from '../../parameters';
 import { Distortion } from '../filters/distortion';
-
+import { Fisheye } from '../filters/fisheye';
+import { ContainerToTexture } from '../core/convertTex';
 /**
- * @class LoadImg
+ * @class ShaderMix
  * @description
- * 画像読み込みこんでアニメーションさせるためのクラス
- *
+ * 画像にshaderかけてそれを読み込みこんでアニメーションさせるためのクラス
  */
-export class LoadImg {
+export class ShaderMix {
   constructor(app) {
     this.app = app;
     this.disp = new OldImage({ app: app, path: disp_path, is_tex: true });
-    // this.display = new Image({ app: app, container: this.container, path: img_path[0], is_tex: false });
 
     this.img_path = img_path;
     this.img_list = []; // 画像のテクスチャを入れるリスト
+    this.eye_list = []; // 魚眼処理かけたテクスチャを入れるリスト
+
     this.filter; //
     this.is_filter = false; // フィルターを適用されたかどうか
     this._init();
@@ -24,7 +25,7 @@ export class LoadImg {
 
   /**
    * @method _init
-   * @memberof LoadImg
+   * @memberof ShaderMix
    * @protected
    * @description
    * 初期化
@@ -39,6 +40,22 @@ export class LoadImg {
       const is_totalLoad = this.img_list.every((img) => img.is_load);
       if (is_totalLoad && this.disp.is_load) {
         clearInterval(timerId);
+        for (let i = 0; i < this.img_list.length; i++) {
+          const container = new PIXI.Container();
+          this.app.stage.addChild(container);
+
+          container.addChild(new PIXI.Sprite(this.img_list[i].img));
+
+          new Fisheye({ app: this.app, container: container, tex: this.img_list[i] });
+          const convert = new ContainerToTexture({
+            app: this.app,
+            width: this.img_list[i].img.width,
+            height: this.img_list[i].img.height,
+          });
+          const tex = convert.convert(container);
+
+          this.eye_list.push(tex);
+        }
         this._setShader();
       }
     }, 100);
@@ -46,24 +63,23 @@ export class LoadImg {
 
   /**
    * @method setShader
-   * @memberof LoadImg
+   * @memberof ShaderMix
    * @protected
    * @description
    * シェーダーをセットする関数、キャンバス全体に適用する<br>
    */
   _setShader() {
-    this.filter = new Distortion({ app: this.app, disp: this.disp, img_list: this.img_list });
+    this.filter = new Distortion({ app: this.app, disp: this.disp, img_list: this.eye_list });
     this.is_filter = true;
   }
 
   /**
    * @method ticker
-   * @memberof LoadImg
+   * @memberof ShaderMix
    * @description
    * シェーダーのアニメーションを行う関数,uniformsの値を変更する
    */
   ticker() {
-    // TODO resize時に画像比率を直す
     if (this.is_filter) this.filter.ticker();
   }
 }
