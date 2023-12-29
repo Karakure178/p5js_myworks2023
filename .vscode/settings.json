@@ -1,13 +1,14 @@
 {
   "files.eol": "\n",
+  "editor.guides.bracketPairs": true,
   "workbench.editor.enablePreview": false,
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "workbench.colorCustomizations": {
     "[Dracula Soft]": {
       "editor.background": "#0c0f17",
       "editor.findMatchHighlightBackground": "#1c1e22",
       "editorGroupHeader.tabsBackground": "#191a21",
-      "editorIndentGuide.activeBackground": "#F0F0F045",
+      "editorIndentGuide.activeBackground1": "#F0F0F045",
       "terminal.background": "#0c0f17",
       "statusBar.background": "#262626",
       "sideBar.background": "#191a21",
@@ -34,16 +35,17 @@
       ".eslintrc": "json",
       ".postcssrc.js": "javascript",
   },
-  "html.format.endWithNewline": true,
   "html.format.extraLiners": "",
   "html.format.maxPreserveNewLines": 2,
   "html.format.wrapLineLength": 0,
   "css.validate": false,
-  "less.validate": false,
   "scss.validate": false,
   "stylelint.validate": ["css", "scss"],
   "editor.codeActionsOnSave": {
     "source.fixAll.stylelint": "explicit",
     "source.fixAll.eslint": "explicit"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
