@@ -8,7 +8,7 @@ import vs from './shader/normal.vert';
  */
 export const sketch = (p) => {
   let canvas;
-  let pg, pg2;
+  let pg;
   let theShader1;
   let w;
 
