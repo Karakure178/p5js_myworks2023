@@ -26,7 +26,7 @@ export const sketch = (p) => {
 
     w = p.width;
     pg = p.createGraphics(p.width, p.height);
-    image_init(pg);
+    image_init(pg, p);
 
     theShader1 = p.createShader(vs, fs);
   };
