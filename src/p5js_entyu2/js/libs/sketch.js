@@ -27,6 +27,8 @@ export const sketch = (p) => {
     image_init(pg, p);
 
     theShader1 = p.createShader(vs, fs);
+
+    // motion用初期化
   };
 
   p.draw = () => {
