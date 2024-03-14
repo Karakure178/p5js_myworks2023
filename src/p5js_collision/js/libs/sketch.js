@@ -7,6 +7,7 @@ import gsap from 'gsap';
 export const sketch = (p) => {
   let canvas;
   let pg;
+  const colors = ['#FF204E', '#A0153E', '#5D0E41', '#00224D'];
 
   p.setup = () => {
     const init = () => {
@@ -25,7 +26,7 @@ export const sketch = (p) => {
   };
 
   p.draw = () => {
-    p.background(110);
+    p.background('#3d486f');
 
     p.push();
     const rect_s = 100;
@@ -34,10 +35,15 @@ export const sketch = (p) => {
     pg.rect(0, 0, rect_s, rect_s);
     pg.pop();
 
-    p.image(pg, 0, 0);
-    const num = 60;
+    // p.image(pg, 0, 0);
+    const num = 1000;
+    p.translate(-p.width / 2, -p.height / 2);
+
     const circles = getRandomCircles(num, p.width, p.height, p);
-    circles.forEach((c) => p.circle(c.x, c.y, c.z));
+    circles.forEach((c) => {
+      p.fill(p.random(colors));
+      p.circle(c.x, c.y, c.z);
+    });
     p.pop();
     p.noLoop();
   };
@@ -62,16 +68,21 @@ const image_init = (pg, p) => {
   pg.noStroke();
 };
 
+/**
+ *
+ * @param {*} n - 個数
+ * @param {*} p
+ * @returns list - グリッドの頂点座標が入った配列
+ */
 const grid = (n, p) => {
   const list = [];
   p.push();
   p.stroke(0);
   p.noFill();
-  p.translate(-p.width / 2, -p.height / 2);
   const num = p.width / n;
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
-      p.rect(i * num, j * num, num, num);
+      //p.rect(i * num, j * num, num, num);
       const n1 = p.createVector(i * num, j * num);
       const n2 = p.createVector(i * num + num, j * num);
       const n3 = p.createVector(i * num + num, j * num + num);
@@ -85,25 +96,28 @@ const grid = (n, p) => {
 
 const getRandomCircles = (_num, _w, _h, p) => {
   let circles = [];
-  const list = grid(5, p);
+  const rand = parseInt(p.random(10, 50));
+  const list = grid(rand, p);
 
   for (let i = 0; i < _num; i++) {
     let x = p.random(-1, 1) * _w;
     let y = p.random(-1, 1) * _h;
-    let z = p.random(3, 15); // z軸の値を円の大きさとして使用
+    let z = p.random(10, 30); // z軸の値を円の大きさとして使用
 
     list.forEach((l) => {
-      // 一番近い頂点を探す
-      // https://gray-code.com/javascript/get-max-value-and-minimum-value-in-array/
-      const n1 = p.dist(x, y, l[0].x, l[0].y);
-      const n2 = p.dist(x, y, l[1].x, l[1].y);
-      const n3 = p.dist(x, y, l[2].x, l[2].y);
-      const n4 = p.dist(x, y, l[3].x, l[3].y);
-      const ls = [n1, n2, n3, n4];
-      const index = ls.indexOf(Math.min(...ls));
-      x = l[index].x;
-      y = l[index].y;
-      console.log(ls, index);
+      if (l[0].x < x && x < l[2].x && l[0].y < y && y < l[2].y) {
+        // 一番近い頂点を探す
+        // https://gray-code.com/javascript/get-max-value-and-minimum-value-in-array/
+        const n1 = p.dist(x, y, l[0].x, l[0].y);
+        const n2 = p.dist(x, y, l[1].x, l[1].y);
+        const n3 = p.dist(x, y, l[2].x, l[2].y);
+        const n4 = p.dist(x, y, l[3].x, l[3].y);
+        const ls = [n1, n2, n3, n4];
+        const index = ls.indexOf(Math.min(...ls));
+        x = l[index].x;
+        y = l[index].y;
+        return;
+      }
     });
 
     if (circles.every((c) => p.dist(x, y, c.x, c.y) > (z + c.z) * 0.5)) {
