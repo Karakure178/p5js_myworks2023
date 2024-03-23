@@ -5,6 +5,7 @@ body {
   align-items: center;
   text-align: center;
 }
+
 canvas {
   display: block;
 }
@@ -13,4 +14,7 @@ canvas {
   display: block;
   width: 800px;
   height: 800px;
+  position: absolute;
+  inset: 0;
+  margin: auto;
 }
